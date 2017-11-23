@@ -24,3 +24,8 @@ class FmtConversions(unittest.TestCase):
 		with self.subTest("Input Validation"):self.assertEqual(
 				fmtconvert.BasicAttendeeToCSV(epoch, self.dummy_stripped, False),
 				compstr + "False")
+
+	# Doing this test just in case. Should never fail.
+	def test_datetime_strftime (self):self.assertEqual(
+			datetime(1970,1,1).strftime("%Y-%m-%d %H:%M:%S"),
+			"1970-01-01 00:00:00")
