@@ -9,7 +9,7 @@ class FmtConversions(unittest.TestCase):
 	)
 
 	@unittest.expectedFailure
-	def test_ToLocalStripped(self):
+	def test_magapiToBasicAttendee(self):
 		self.assertEqual(fmtconvert.magapiToBasicAttendee(""), self.dummy_stripped)
 
 	def test_BasicAttendeeToCSV(self):
