@@ -1,0 +1,2 @@
+#!/bin/zsh
+python -W ignore::DeprecationWarning -m unittest discover tests
