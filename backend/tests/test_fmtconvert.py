@@ -1,6 +1,8 @@
 import unittest
-from datetime   import datetime
-from util		import fmtconvert
+import logging
+from datetime		import datetime
+from util			import fmtconvert
+from testfixtures	import log_capture
 
 class FmtConversions(unittest.TestCase):
 	dummy_stripped	= dict(
@@ -8,9 +10,19 @@ class FmtConversions(unittest.TestCase):
 		badge_t = "staff", badge_n = 500, hr_total = 30, hr_worked = 0
 	)
 
-	@unittest.expectedFailure
-	def test_magapiToBasicAttendee(self):
-		self.assertEqual(fmtconvert.magapiToBasicAttendee(""), self.dummy_stripped)
+#	@unittest.expectedFailure
+	@log_capture(level=logging.ERROR)
+	def test_magapiToBasicAttendee(self, capture):
+		with self.subTest("Input Validation"):
+			self.assertEqual(fmtconvert.magapiToBasicAttendee("Bad input"), {})
+		with self.subTest("Input Validation 2"):
+			self.assertEqual(fmtconvert.magapiToBasicAttendee(
+				"Bad input long text 12345678901234567890"), {})
+		capture.check(
+			("util.fmtconvert","ERROR",
+			"Malformed data in conversion: Bad input"),
+			("util.fmtconvert","ERROR",
+			"Malformed data in conversion: Bad input long text 1234567890..."))
 
 	def test_BasicAttendeeToCSV(self):
 		epoch = datetime(1970,1,1)
