@@ -1,2 +1,4 @@
 #!/bin/zsh
+cd $(dirname ${(%):-%x})/..
 python -W ignore::DeprecationWarning -m unittest discover tests
+
