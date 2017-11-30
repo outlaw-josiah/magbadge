@@ -1,24 +1,22 @@
-# Bind to address (Probably always blank)
-addr		= ''
-# Bind to port
-port		= 28000
-logfile		= "staging.csv"
+class runtime:
+	url = "https://onsite.uber.magfest.org/uber/jsonrpc/"
+	l_port = 28424
+	logfile_pre = ""
+	logfile_suf = ".csv"
 
-# API access creds
-crtfile		= "client.crt"
-keyfile		= "client.key"
+class debug:
+	"""Settings that should be used during debugging."""
+	url = runtime.url.replace("onsite","staging4")
+	logfile_pre = "DEBUG_"
 
-# Hours from GMT that log files should use (Hardcoded for now)
-tz_offset   = -5
-
-# MAGFest API options/metadata
-magapiopts	= dict(
-	cert	= (crtfile, keyfile),
-	headers = { "Content-Type": "application/json"},
-	json	= { "jsonrpc":  "2.0",
-				"method":   "barcode.lookup_attendee_from_barcode",
-				"id":		"magbadgeserver-staffsuite"},
-	timeout = 3,
-	url = "https://onsite.uber.magfest.org:4444/jsonrpc/"
-)
-
+class magapi:
+	"""Generic MAG API calls. These will error out if called as-is.
+	Additionally contains the headers for calling the API (without auth token)"""
+	headers = {
+		"Content-Type": "application/json",
+		"X-Auth-Token": ""
+	}
+	lookup = {"method": "attendee.lookup", "params": ["badge_num"]}
+	search = {"method": "attendee.search", "params": ["query"]}
+	barcode_lookup = {"method": "barcode.lookup_attendee_from_barcode", "params": ["barcode_value"]}
+	barcode_badge = {"method": "barcode.lookup_badge_number_from_barcode", "params": ["barcode_value"]}
