@@ -20,3 +20,7 @@ class magapi:
 	search = {"method": "attendee.search", "params": ["query"]}
 	barcode_lookup = {"method": "barcode.lookup_attendee_from_barcode", "params": ["barcode_value"]}
 	barcode_badge = {"method": "barcode.lookup_badge_number_from_barcode", "params": ["barcode_value"]}
+
+# Everything else here is "Hardcode" settings, put here to keep them out of the main module
+from distutils.version import StrictVersion
+version=StrictVersion("2.0.0a1")
