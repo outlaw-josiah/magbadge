@@ -15,7 +15,7 @@ def getSetting(name):
 
 
 def parseargs():
-	'''Parses command-line arguments and returns them as a '''
+	'''Parses command-line arguments and returns them as a Namespace object'''
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
 		'-V', '--version', action='version',
