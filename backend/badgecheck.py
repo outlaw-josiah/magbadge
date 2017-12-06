@@ -23,9 +23,8 @@ def startup():
 		"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
 		"%Y-%m-%d %H:%M:%S"))
 	logger.addHandler(fh)
-	logger.info('Logging set up.')
-	logger.info(
-		"Continuing boot of badge check midlayer v{}".format(settings.version))
+	logger.debug('Logging set up.')
+	logger.info("Badge check midlayer v{}".format(settings.version))
 
 	# Set up API key
 	try:
