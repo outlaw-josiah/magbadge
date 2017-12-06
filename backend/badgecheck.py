@@ -9,11 +9,13 @@ def startup():
 
 	# Set up logging
 	logger = logging.getLogger(__name__);
-	logger.setLevel(logging.INFO)
+	logger.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler()
 	# Set loglevel and format
-	ch.setLevel(logging.WARN); ch.setFormatter(logging.Formatter(
-		"[%(levelname)8s] %(name)s: %(message)s"))
+	ch.setLevel(logging.WARN)
+	if args.verbose:	ch.setLevel(logging.INFO)
+	if args.debug:		ch.setLevel(logging.DEBUG)
+	ch.setFormatter(logging.Formatter("[%(levelname)8s] %(name)s: %(message)s"))
 	logger.addHandler(ch)
 	fh = logging.FileHandler(settings.logfile)
 	# Set loglevel and format
