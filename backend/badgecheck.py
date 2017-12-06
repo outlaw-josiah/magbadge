@@ -34,7 +34,6 @@ def startup():
 	open(settings.logfile, 'w').close()
 
 	# Set up logging
-	logger = logging.getLogger(__name__)
 	logger.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler()
 	# Set loglevel and format
@@ -68,5 +67,6 @@ def startup():
 
 
 if __name__ == '__main__':
+	logger = logging.getLogger(__name__)
 	args = parseargs()
 	startup()
