@@ -5,6 +5,15 @@ from uuid		import UUID
 from os			import path, chdir
 
 
+def getSetting(name):
+	'''Get setting from either debug or runtime scope. If getting setting from
+	debug scope, fall back to runtime scope if debug doesn't specify'''
+	if args.debug:
+		getattr(settings.debug, name, getattr(settings.runtime, name))
+	else:
+		getattr(settings.runtime, name)
+
+
 def parseargs():
 	'''Parses command-line arguments and returns them as a '''
 	parser = argparse.ArgumentParser()
