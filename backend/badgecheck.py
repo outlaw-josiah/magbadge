@@ -36,11 +36,17 @@ def parseargs():
 		'-V', '--version', action='version',
 		version="%(prog)s v{}".format(settings.version))
 	parser.add_argument(
-		'--debug', action='store_true',
-		help='Run with debug settings')
+		'-e', '--expand-json', action='store_false', dest='minify',
+		help='Add newlines and spacing to JSON responses')
+	parser.add_argument(
+		'-E', '--no-expand-json', action='store_true', dest='minify',
+		help='Undo --expand-json')
 	parser.add_argument(
 		'-v', '--verbose', action='store_true',
 		help='Output more verbose info')
+	parser.add_argument(
+		'--debug', action='store_true',
+		help='Run with debug settings')
 	return parser.parse_args()
 
 
