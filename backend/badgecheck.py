@@ -1,3 +1,4 @@
+#!/bin/env python3
 import settings, logging, argparse
 from uuid	import UUID
 from os		import path, chdir
