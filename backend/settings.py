@@ -31,7 +31,7 @@ class magapi:
 		"params": ["barcode_value"]}
 
 
-# Everything else here is "Hardcode" settings, put here to keep them out of the
+# Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
 from distutils.version import StrictVersion
 version = StrictVersion("2.0.0a1")
