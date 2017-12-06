@@ -16,8 +16,7 @@ class magapi:
 	Additionally contains the headers for calling the API (without auth token)"""
 	headers = {
 		"Content-Type": "application/json",
-		"X-Auth-Token": ""
-	}
+		"X-Auth-Token": ""}
 	lookup = {
 		"method": "attendee.lookup",
 		"params": ["badge_num"]}
