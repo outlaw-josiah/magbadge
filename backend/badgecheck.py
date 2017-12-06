@@ -4,12 +4,16 @@ from uuid	import UUID
 from os		import path, chdir
 
 def parseargs():
+	'''Parses command-line arguments and returns them as a '''
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-V', '--version', action='version',
+	parser.add_argument(
+		'-V', '--version', action='version',
 		version="%(prog)s v{}".format(settings.version))
-	parser.add_argument('--debug', action='store_true',
+	parser.add_argument(
+		'--debug', action='store_true',
 		help='Run with debug settings')
-	parser.add_argument('-v', '--verbose', action='store_true',
+	parser.add_argument(
+		'-v', '--verbose', action='store_true',
 		help='Output more verbose info')
 	return parser.parse_args()
 
@@ -18,7 +22,7 @@ def startup():
 	open(settings.logfile, 'w').close()
 
 	# Set up logging
-	logger = logging.getLogger(__name__);
+	logger = logging.getLogger(__name__)
 	logger.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler()
 	# Set loglevel and format

@@ -7,7 +7,9 @@ lenDataTrunc = 30
 def magapiToBasicAttendee(verbose):
 	if type(verbose) != dict:
 		# Input validation
-		lgr.error("Malformed data in conversion: {{:.{}}}".format(lenDataTrunc)
+		lgr.error(
+			"Malformed data in conversion: {{:.{}}}"
+			.format(lenDataTrunc)
 			.format(str(verbose)) +
 			("" if (len(str(verbose)) < lenDataTrunc) else "...")
 		)
