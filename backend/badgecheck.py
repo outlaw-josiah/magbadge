@@ -1,4 +1,4 @@
-import settings, logging
+import settings, logging, argparse
 from uuid	import UUID
 from os		import path, chdir
 
@@ -37,4 +37,12 @@ def startup():
 		raise SystemExit
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-V', '--version', action='version',
+		version="%(prog)s v{}".format(settings.version))
+	parser.add_argument('--debug', action='store_true',
+		help='Run with debug settings')
+	parser.add_argument('-v', '--verbose', action='store_true',
+		help='Output more verbose info')
+	args = parser.parse_args()
 	startup()
