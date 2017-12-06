@@ -1,7 +1,8 @@
 #!/bin/env python3
 import settings, logging, argparse
-from uuid	import UUID
-from os		import path, chdir
+from datetime	import datetime
+from uuid		import UUID
+from os			import path, chdir
 
 
 def parseargs():
@@ -40,7 +41,10 @@ def startup():
 		"%Y-%m-%d %H:%M:%S"))
 	logger.addHandler(fh)
 	logger.debug('Logging set up.')
-	logger.info("Badge check midlayer v{}".format(settings.version))
+	logger.info("Badge check midlayer v{} starting on {} ({})".format(
+		settings.version,
+		datetime.now().date(),
+		datetime.now().date().strftime("%A")))
 
 	# Set up API key
 	try:
