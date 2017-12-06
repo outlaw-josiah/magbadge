@@ -70,7 +70,8 @@ def startup():
 		"%Y-%m-%d %H:%M:%S"))
 	logger.addHandler(fh)
 	logger.debug('Logging set up.')
-	logger.info("Badge check midlayer v{} starting on {} ({})".format(
+	logger.debug('Args state: {}'.format(args))
+	logger.info('Badge check midlayer v{} starting on {} ({})'.format(
 		settings.version,
 		datetime.now().date(),
 		datetime.now().date().strftime("%A")))
