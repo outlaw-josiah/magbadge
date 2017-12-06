@@ -3,6 +3,15 @@ import settings, logging, argparse
 from uuid	import UUID
 from os		import path, chdir
 
+def parseargs():
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-V', '--version', action='version',
+		version="%(prog)s v{}".format(settings.version))
+	parser.add_argument('--debug', action='store_true',
+		help='Run with debug settings')
+	parser.add_argument('-v', '--verbose', action='store_true',
+		help='Output more verbose info')
+	return parser.parse_args()
 
 def startup():
 	chdir(path.dirname(path.abspath(__file__)))
@@ -39,12 +48,5 @@ def startup():
 		raise SystemExit
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-V', '--version', action='version',
-		version="%(prog)s v{}".format(settings.version))
-	parser.add_argument('--debug', action='store_true',
-		help='Run with debug settings')
-	parser.add_argument('-v', '--verbose', action='store_true',
-		help='Output more verbose info')
-	args = parser.parse_args()
+	args =parseargs()
 	startup()
