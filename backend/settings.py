@@ -24,3 +24,4 @@ class magapi:
 # Everything else here is "Hardcode" settings, put here to keep them out of the main module
 from distutils.version import StrictVersion
 version=StrictVersion("2.0.0a1")
+logfile="server.log"

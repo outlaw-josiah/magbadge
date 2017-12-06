@@ -1,12 +1,27 @@
 import settings, logging
-from uuid import UUID
+from uuid	import UUID
+from os		import path, chdir
 
 
 def startup():
+	chdir(path.dirname(path.abspath(__file__)))
+	open(settings.logfile, 'w').close()
+
 	# Set up logging
-	logging.basicConfig(format = "[%(levelname)8s] %(name)s: %(message)s")
 	logger = logging.getLogger(__name__);
-	logger.debug('Logging set up.')
+	logger.setLevel(logging.INFO)
+	ch = logging.StreamHandler()
+	# Set loglevel and format
+	ch.setLevel(logging.WARN); ch.setFormatter(logging.Formatter(
+		"[%(levelname)8s] %(name)s: %(message)s"))
+	logger.addHandler(ch)
+	fh = logging.FileHandler(settings.logfile)
+	# Set loglevel and format
+	fh.setLevel(logging.INFO); fh.setFormatter(logging.Formatter(
+		"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
+		"%Y-%m-%d %H:%M:%S"))
+	logger.addHandler(fh)
+	logger.info('Logging set up.')
 
 	# Set up API key
 	try:
