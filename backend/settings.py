@@ -4,10 +4,12 @@ class runtime:
 	logfile_pre = ""
 	logfile_suf = ".csv"
 
+
 class debug:
 	"""Settings that should be used during debugging."""
-	url = runtime.url.replace("onsite","staging4")
+	url = runtime.url.replace("onsite", "staging4")
 	logfile_pre = "DEBUG_"
+
 
 class magapi:
 	"""Generic MAG API calls. These will error out if called as-is.
@@ -16,12 +18,22 @@ class magapi:
 		"Content-Type": "application/json",
 		"X-Auth-Token": ""
 	}
-	lookup = {"method": "attendee.lookup", "params": ["badge_num"]}
-	search = {"method": "attendee.search", "params": ["query"]}
-	barcode_lookup = {"method": "barcode.lookup_attendee_from_barcode", "params": ["barcode_value"]}
-	barcode_badge = {"method": "barcode.lookup_badge_number_from_barcode", "params": ["barcode_value"]}
+	lookup = {
+		"method": "attendee.lookup",
+		"params": ["badge_num"]}
+	search = {
+		"method": "attendee.search",
+		"params": ["query"]}
+	barcode_lookup = {
+		"method": "barcode.lookup_attendee_from_barcode",
+		"params": ["barcode_value"]}
+	barcode_badge = {
+		"method": "barcode.lookup_badge_number_from_barcode",
+		"params": ["barcode_value"]}
 
-# Everything else here is "Hardcode" settings, put here to keep them out of the main module
+
+# Everything else here is "Hardcode" settings, put here to keep them out of the
+# main module
 from distutils.version import StrictVersion
-version=StrictVersion("2.0.0a1")
-logfile="server.log"
+version = StrictVersion("2.0.0a1")
+logfile = "server.log"

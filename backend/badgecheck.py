@@ -3,6 +3,7 @@ import settings, logging, argparse
 from uuid	import UUID
 from os		import path, chdir
 
+
 def parseargs():
 	'''Parses command-line arguments and returns them as a '''
 	parser = argparse.ArgumentParser()
@@ -16,6 +17,7 @@ def parseargs():
 		'-v', '--verbose', action='store_true',
 		help='Output more verbose info')
 	return parser.parse_args()
+
 
 def startup():
 	chdir(path.dirname(path.abspath(__file__)))
@@ -51,6 +53,7 @@ def startup():
 		logger.fatal('API key not a valid UUID, refusing to run.')
 		raise SystemExit
 
+
 if __name__ == '__main__':
-	args =parseargs()
+	args = parseargs()
 	startup()

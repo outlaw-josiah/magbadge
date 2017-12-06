@@ -18,6 +18,7 @@ def magapiToBasicAttendee(verbose):
 	attnd = verbose['result']
 	return ""
 
+
 def BasicAttendeeToCSV(date, attendee, allowed=""):
 	return "{},{},{},{},{},{},{},{}".format(
 		date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -27,4 +28,3 @@ def BasicAttendeeToCSV(date, attendee, allowed=""):
 		attendee['ribbon'],
 		allowed if type(allowed) == bool else ""
 	)
-
