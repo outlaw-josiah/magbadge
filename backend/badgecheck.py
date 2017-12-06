@@ -1,8 +1,23 @@
 #!/bin/env python3
-import settings, logging, argparse
+import settings, logging, argparse, requests
+from copy		import deepcopy
 from datetime	import datetime
 from uuid		import UUID
 from os			import path, chdir
+
+
+def getAttndViaBadgeNumber(num):
+	if (type(num) != int) or num < 0:
+		logger.warning('({}) is not an integer or is less than 0'.format(num))
+		raise ValueError('')
+	req = deepcopy(settings.magapi.lookup)
+	req['params'][0] = str(num)
+	resp = requests.post(
+		getSetting('url'),
+		json=req,
+		headers=settings.magapi.headers
+	)
+	return resp
 
 
 def getSetting(name):
