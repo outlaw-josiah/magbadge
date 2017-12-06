@@ -11,7 +11,7 @@ def magapiToBasicAttendee(verbose):
 			"Malformed data in conversion: {{:.{}}}"
 			.format(lenDataTrunc)
 			.format(str(verbose)) +
-			("" if (len(str(verbose)) < lenDataTrunc) else "...")
+			(str() if (len(str(verbose)) < lenDataTrunc) else "...")
 		)
 		lgr.info("Data was:\n" + verbose)
 		return dict()
