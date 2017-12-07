@@ -46,8 +46,8 @@ def parseargs():
 		'-E', '--no-expand-json', action='store_true', dest='minify',
 		help='Undo --expand-json')
 	parser.add_argument(
-		'-v', '--verbose', action='store_true',
-		help='Output more verbose info')
+		'-v', '--verbose', action='count', default=0,
+		help='Output more verbose info. Specify more than once to increase.')
 	parser.add_argument(
 		'--debug', action='store_true',
 		help='Run with debug settings')
@@ -63,8 +63,9 @@ def startup():
 	ch = logging.StreamHandler()
 	# Set loglevel and format
 	ch.setLevel(logging.WARN)
-	if args.verbose: ch.setLevel(logging.INFO)
-	if args.debug:
+	if args.verbose > 0:
+		ch.setLevel(logging.INFO)
+	if args.verbose > 1:
 		ch.setLevel(logging.DEBUG)
 		logging.getLogger("requests").setLevel(logging.DEBUG)
 		logging.getLogger("urllib3").setLevel(logging.DEBUG)
