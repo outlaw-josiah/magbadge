@@ -19,13 +19,13 @@ class magapi:
 		"X-Auth-Token": ""}
 	lookup = {
 		"method": "attendee.lookup",
-		"params": ["badge_num"]}
+		"params": ["badge_num", "full"]}
 	search = {
 		"method": "attendee.search",
 		"params": ["query"]}
 	barcode_lookup = {
 		"method": "barcode.lookup_attendee_from_barcode",
-		"params": ["barcode_value"]}
+		"params": ["barcode_value", "full"]}
 	barcode_badge = {
 		"method": "barcode.lookup_badge_number_from_barcode",
 		"params": ["barcode_value"]}

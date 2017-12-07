@@ -6,13 +6,19 @@ from uuid		import UUID
 from os			import path, chdir
 
 
-def getAttndViaBadgeNumber(num):
-	if (type(num) != int) or num < 0:
-		logger.warning('({}) is not an integer or is less than 0'.format(num))
-		raise ValueError('')
-	req = deepcopy(settings.magapi.lookup)
-	req['params'][0] = str(num)
-	logger.info('Looking up badge #{}'.format(num))
+def getAttndFromBadge(badge):
+	'''Takes a string that can be scanned barcode or a positive number,
+	otherwise raises a ValueError, then queries the MAGAPI for the
+	associated attendee'''
+	if (type(badge) == str and [0] != '~'):
+		req = deepcopy(settings.magapi.barcode_lookup)
+	else:
+		if int(badge) < 0:
+			logger.warning('({}) is less than 0'.format(badge))
+			raise ValueError('({}) is less than 0'.format(badge))
+		req = deepcopy(settings.magapi.lookup)
+	req['params'][0] = str(badge)
+	logger.info('Looking up badge {}'.format(badge))
 	logger.debug(req)
 	resp = requests.post(
 		getSetting('url'),

@@ -54,6 +54,6 @@ class requestchecks(unittest.TestCase):
 	def test_viaBadgeNum(self):
 		for b in ([10**x for x in range(0,4)] + [x for x in range(20,40)]):
 			with self.subTest("Badge {}".format(b)), open('tests/sampledata/b{}.json'.format(b)) as f:
-				apidata = bdgchk.getAttndViaBadgeNumber(b).text
+				apidata = bdgchk.getAttndFromBadge(b).text
 				sampledata = f.read()
 				self.assertEqual(apidata, sampledata)
