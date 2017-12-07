@@ -63,8 +63,12 @@ def startup():
 	ch = logging.StreamHandler()
 	# Set loglevel and format
 	ch.setLevel(logging.WARN)
-	if args.verbose:	ch.setLevel(logging.INFO)
-	if args.debug:		ch.setLevel(logging.DEBUG)
+	if args.verbose:
+		ch.setLevel(logging.INFO)
+	if args.debug:
+		ch.setLevel(logging.DEBUG)
+		logging.getLogger("requests").setLevel(logging.DEBUG)
+		logging.getLogger("urllib3").setLevel(logging.DEBUG)
 	ch.setFormatter(logging.Formatter("[%(levelname)8s] %(name)s: %(message)s"))
 	logger.addHandler(ch)
 	fh = logging.FileHandler(settings.logfile)
@@ -93,6 +97,6 @@ def startup():
 
 
 if __name__ == '__main__':
-	logger = logging.getLogger(__name__)
+	logger = logging.getLogger()
 	args = parseargs()
 	startup()
