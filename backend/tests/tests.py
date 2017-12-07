@@ -51,6 +51,13 @@ class requestchecks(unittest.TestCase):
 			bdgchk.settings.magapi.headers['X-Auth-Token'] = f.read().strip()
 
 
+	@classmethod
+	def tearDownClass(cls):
+		bdgchk.logger = None
+		bdgchk.args = None
+		bdgchk.settings.magapi.headers['X-Auth-Token'] = ''
+
+
 	def test_viaBadgeNum(self):
 		for b in ([10**x for x in range(0,4)] + [x for x in range(20,40)]):
 			with self.subTest("Badge {}".format(b)), open('tests/sampledata/b{}.json'.format(b)) as f:
