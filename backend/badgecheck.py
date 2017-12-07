@@ -12,11 +12,15 @@ def getAttndViaBadgeNumber(num):
 		raise ValueError('')
 	req = deepcopy(settings.magapi.lookup)
 	req['params'][0] = str(num)
+	logger.info('Looking up badge #{}'.format(num))
+	logger.debug(req)
 	resp = requests.post(
 		getSetting('url'),
 		json=req,
 		headers=settings.magapi.headers
 	)
+	logger.info('Server response was HTTP {}'.format(resp.status_code))
+	logger.debug(resp.text)
 	return resp
 
 
