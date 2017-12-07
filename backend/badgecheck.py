@@ -1,12 +1,13 @@
 #!/bin/env python3
-import settings, logging, argparse, requests
+import settings, logging, argparse, requests, asyncio
 from copy		import deepcopy
 from datetime	import datetime
+from functools	import partial
 from uuid		import UUID
 from os			import path, chdir
 
 
-def getAttndFromBadge(badge):
+async def getAttndFromBadge(badge):
 	'''Takes a string that can be scanned barcode or a positive number,
 	otherwise raises a ValueError, then queries the MAGAPI for the
 	associated attendee'''
@@ -18,15 +19,20 @@ def getAttndFromBadge(badge):
 			raise ValueError('({}) is less than 0'.format(badge))
 		req = deepcopy(settings.magapi.lookup)
 	req['params'][0] = str(badge)
-	logger.info('Looking up badge {}'.format(badge))
-	logger.debug(req)
-	resp = requests.post(
-		getSetting('url'),
-		json=req,
+	kwargs = dict(
+		url = getSetting('url'),
+		timeout = getSetting('timeout'),
+		json = req,
 		headers=settings.magapi.headers
 	)
+
+	logger.info('Looking up badge {}'.format(badge))
+	logger.debug(req)
+	futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
+	resp = await futr_resp
 	logger.info('Server response was HTTP {}'.format(resp.status_code))
 	logger.debug(resp.text)
+
 	return resp
 
 

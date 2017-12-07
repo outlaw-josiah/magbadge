@@ -1,4 +1,4 @@
-import unittest, logging, badgecheck as bdgchk, sys
+import unittest, logging, badgecheck as bdgchk, sys, asyncio
 from datetime		import datetime
 from util			import fmtconvert
 from testfixtures	import log_capture
@@ -47,6 +47,7 @@ class requestchecks(unittest.TestCase):
 	def setUpClass(cls):
 		bdgchk.logger = logging.getLogger()
 		bdgchk.args = Namespace(verbose=0, minify=True, debug=True)
+		bdgchk.loop = asyncio.get_event_loop()
 		with open('apikey.txt') as f:
 			bdgchk.settings.magapi.headers['X-Auth-Token'] = f.read().strip()
 
@@ -61,7 +62,7 @@ class requestchecks(unittest.TestCase):
 	def test_viaBadgeNum(self):
 		for b in ([10**x for x in range(0,4)] + [x for x in range(20,40)]):
 			with self.subTest("Badge {}".format(b)), open('tests/sampledata/b{}.json'.format(b)) as f:
-				apidata = bdgchk.getAttndFromBadge(b).text
+				apidata = bdgchk.loop.run_until_complete(bdgchk.getAttndFromBadge(b)).text
 				sampledata = f.read()
 				self.assertEqual(apidata, sampledata)
 
