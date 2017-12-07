@@ -1,8 +1,8 @@
-import unittest
-import logging
+import unittest, logging, badgecheck as bdgchk, sys
 from datetime		import datetime
 from util			import fmtconvert
 from testfixtures	import log_capture
+from argparse		import Namespace
 
 class FmtConversions(unittest.TestCase):
 	dummy_stripped	= dict(
@@ -41,3 +41,19 @@ class FmtConversions(unittest.TestCase):
 	def test_datetime_strftime (self):self.assertEqual(
 			datetime(1970,1,1).strftime("%Y-%m-%d %H:%M:%S"),
 			"1970-01-01 00:00:00")
+
+class requestchecks(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		bdgchk.logger = logging.getLogger()
+		bdgchk.args = Namespace(verbose=0, minify=True, debug=True)
+		with open('apikey.txt') as f:
+			bdgchk.settings.magapi.headers['X-Auth-Token'] = f.read().strip()
+
+
+	def test_viaBadgeNum(self):
+		for b in ([10**x for x in range(0,4)] + [x for x in range(20,40)]):
+			with self.subTest("Badge {}".format(b)), open('tests/sampledata/b{}.json'.format(b)) as f:
+				apidata = bdgchk.getAttndViaBadgeNumber(b).text
+				sampledata = f.read()
+				self.assertEqual(apidata, sampledata)
