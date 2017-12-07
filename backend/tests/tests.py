@@ -64,3 +64,38 @@ class requestchecks(unittest.TestCase):
 				apidata = bdgchk.getAttndFromBadge(b).text
 				sampledata = f.read()
 				self.assertEqual(apidata, sampledata)
+
+
+class testSettings(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		bdgchk.args = Namespace(debug=False)
+
+
+	def test_runtime_gets(self):
+		bdgchk.args.debug = False
+		self.assertEqual(
+			bdgchk.settings.runtime.url,
+			bdgchk.getSetting('url'))
+		self.assertEqual(
+			bdgchk.settings.runtime.l_port,
+			bdgchk.getSetting('l_port'))
+		self.assertEqual(
+			bdgchk.settings.runtime.logfile_suf,
+			bdgchk.getSetting('logfile_suf'))
+
+
+	def test_debug_gets(self):
+		bdgchk.args.debug = True
+		self.assertNotEqual(
+			bdgchk.settings.runtime.url,
+			bdgchk.getSetting('url'))
+		self.assertEqual(
+			bdgchk.settings.debug.url,
+			bdgchk.getSetting('url'))
+		self.assertEqual(
+			bdgchk.settings.runtime.l_port,
+			bdgchk.getSetting('l_port'))
+		self.assertEqual(
+			bdgchk.settings.runtime.logfile_suf,
+			bdgchk.getSetting('logfile_suf'))
