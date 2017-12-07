@@ -63,8 +63,7 @@ def startup():
 	ch = logging.StreamHandler()
 	# Set loglevel and format
 	ch.setLevel(logging.WARN)
-	if args.verbose:
-		ch.setLevel(logging.INFO)
+	if args.verbose: ch.setLevel(logging.INFO)
 	if args.debug:
 		ch.setLevel(logging.DEBUG)
 		logging.getLogger("requests").setLevel(logging.DEBUG)
@@ -73,7 +72,8 @@ def startup():
 	logger.addHandler(ch)
 	fh = logging.FileHandler(settings.logfile)
 	# Set loglevel and format
-	fh.setLevel(logging.INFO); fh.setFormatter(logging.Formatter(
+	fh.setLevel(logging.INFO)
+	fh.setFormatter(logging.Formatter(
 		"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
 		"%Y-%m-%d %H:%M:%S"))
 	logger.addHandler(fh)
