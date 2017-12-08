@@ -3,12 +3,14 @@ class runtime:
 	l_port = 28424
 	logfile_pre = ""
 	logfile_suf = ".csv"
+	timeout = 2
 
 
 class debug:
 	"""Settings that should be used during debugging."""
 	url = runtime.url.replace("onsite", "staging4")
 	logfile_pre = "DEBUG_"
+	timeout = 4
 
 
 class magapi:
