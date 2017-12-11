@@ -1,4 +1,5 @@
 import unittest, logging, badgecheck as bdgchk, sys, asyncio
+from json			import loads
 from datetime		import datetime
 from util			import fmtconvert
 from testfixtures	import log_capture
@@ -64,7 +65,7 @@ class requestchecks(unittest.TestCase):
 			with self.subTest("Badge {}".format(b)), open('tests/sampledata/b{}.json'.format(b)) as f:
 				apidata = bdgchk.loop.run_until_complete(bdgchk.getAttndFromBadge(b)).text
 				sampledata = f.read()
-				self.assertEqual(apidata, sampledata)
+				self.assertEqual(loads(apidata), loads(sampledata))
 
 
 class testSettings(unittest.TestCase):
