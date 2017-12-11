@@ -68,6 +68,21 @@ class requestchecks(unittest.TestCase):
 				self.assertEqual(loads(apidata), loads(sampledata))
 
 
+	def test_viaScannedBadge(self):
+		self.maxDiff = None
+		barcodes = [
+			"~R3FsDQ", "~IyWvWg", "~o3aPCw", "~RCYmuw", "~IQY/Vw", "~FqrOLA", "~Mf8CUA", "~OncJ2A",
+			"~fIdHsA", "~ye1h3g", "~rH4oQQ", "~7NDK/Q", "~CG5CMA", "~5KzC3g", "~TBFnbA", "~ZqD5ew",
+			"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
+		for b in [x for x in range(20,40)]:
+			with \
+			self.subTest("Badge {}".format(barcodes[b - 20])),\
+			open('tests/sampledata/b{}.json'.format(b)) as f:
+				apidata = bdgchk.loop.run_until_complete(bdgchk.getAttndFromBadge(barcodes[b - 20])).text
+				sampledata = f.read()
+				self.assertEqual(loads(apidata), loads(sampledata))
+
+
 class testSettings(unittest.TestCase):
 	@classmethod
 	def setUpClass(cls):
