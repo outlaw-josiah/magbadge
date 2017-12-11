@@ -69,8 +69,11 @@ def parseargs():
 def startup():
 	chdir(path.dirname(path.abspath(__file__)))
 	open(settings.logfile, 'w').close()
+	global args, logger
+	args = parseargs()
 
 	# Set up logging
+	logger = logging.getLogger()
 	logger.setLevel(logging.DEBUG)
 	ch = logging.StreamHandler()
 	# Set loglevel and format
@@ -110,6 +113,4 @@ def startup():
 
 
 if __name__ == '__main__':
-	logger = logging.getLogger()
-	args = parseargs()
 	startup()
