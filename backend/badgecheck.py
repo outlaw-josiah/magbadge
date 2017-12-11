@@ -36,6 +36,13 @@ async def getAttndFromBadge(badge):
 	return resp
 
 
+async def prcs_connection(sock, path):
+	'''Process incoming connections'''
+	logging.debug('Client connection opened at {}:{}'.format(*sock))
+	while sock.open:
+		msg = await sock.recv()
+
+
 def getSetting(name):
 	'''Get setting from either debug or runtime scope. If getting setting from
 	debug scope, fall back to runtime scope if debug doesn't specify'''
