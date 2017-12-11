@@ -20,9 +20,9 @@ async def getAttndFromBadge(badge):
 		req = deepcopy(settings.magapi.lookup)
 	req['params'][0] = str(badge)
 	kwargs = dict(
-		url = getSetting('url'),
-		timeout = getSetting('timeout'),
-		json = req,
+		url=getSetting('url'),
+		timeout=getSetting('timeout'),
+		json=req,
 		headers=settings.magapi.headers
 	)
 
