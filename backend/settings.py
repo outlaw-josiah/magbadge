@@ -35,10 +35,8 @@ class magapi:
 
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
-#from distutils.version import StrictVersion
-#version = StrictVersion("2.0.0a1")
 from setuptools_scm import get_version
 version_full = get_version(root='..')
 version = version_full.split('+')[0]
-version_meta = version_full.split('+')[1]
+version_meta = version_full.split('+')[1] if '+' in version_full else ''
 logfile = "server.log"
