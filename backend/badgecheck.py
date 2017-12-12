@@ -76,8 +76,9 @@ def parseargs():
 def startup():
 	chdir(path.dirname(path.abspath(__file__)))
 	open(settings.logfile, 'w').close()
-	global args, logger
+	global args, logger, loop
 	args = parseargs()
+	loop = asyncio.get_event_loop()
 
 	# Set up logging
 	logger = logging.getLogger()
