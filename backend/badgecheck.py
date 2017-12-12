@@ -38,7 +38,8 @@ async def getAttndFromBadge(badge):
 
 async def prcs_connection(sock, path):
 	'''Process incoming connections'''
-	logging.debug('Client connection opened at {}:{}'.format(*sock))
+	logging.debug('Client connection opened at {}:{}'.format(
+		*sock.remote_address))
 	while sock.open:
 		msg = await sock.recv()
 
