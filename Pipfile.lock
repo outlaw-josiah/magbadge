@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cbffca13f95d0bedaef2a2a3fcce7767a2cba5e63e37b4a16c163fac24029b46"
+            "sha256": "cdbbca76f6a36ba5c2356d3c62a75a0c37f18dc3634d05b79a89d84e2be9ace1"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -54,6 +54,19 @@
                 "sha256:9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e"
             ],
             "version": "==2.18.4"
+        },
+        "setuptools-scm": {
+            "hashes": [
+                "sha256:cf33fe2700eb86f8df24bd1817b799275ff5c7df81285e0e2fe936ab682e1d83",
+                "sha256:aacf974155145299476415483d589b40b72fd2b88c61ac64d956885a9ad2953e",
+                "sha256:dac89650c7909d238965e163e10b736cbd3a72f28e2dd5c0fea6cf5e49e8562e",
+                "sha256:85a76a91a90a0136bbd8f5e6965e21a44210fb6eac9a1ba7aa73ed934cdc3156",
+                "sha256:3dc14aea0ffc7cb05a874270390c7a53f8e5940889f3e0d1099c76ef1d64ba3f",
+                "sha256:393585ffa3877b2997e5d9e0c3f1aeb34726328ed98c31c6d574504c01f5e63e",
+                "sha256:8f6270dfadb363d5dc75696e36131d614e975495deac126d913479aedda737ac",
+                "sha256:49ab4685589986a42da85706b3311a2f74f1af567d39fee6cb1e088d7a75fb5f"
+            ],
+            "version": "==1.15.6"
         },
         "testfixtures": {
             "hashes": [
