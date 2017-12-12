@@ -73,7 +73,31 @@ def parseargs():
 	return parser.parse_args()
 
 
+def setLogLevel(firstRun=False):
+	'''Sets logging level based on the program verbosity state. Only cares
+	about the first StreamHandler or FileHandler attached to logger.'''
+	ch = [h for h in logger.handlers if type(h) is logging.StreamHandler][0]
+	fh = [h for h in logger.handlers if type(h) is logging.FileHandler][0]
+	if not firstRun:
+		logger.warning("Changing log level")
+	# Set to default levels
+	ch.setLevel(logging.WARN)
+	fh.setLevel(logging.INFO)
+	logging.getLogger("requests").setLevel(logging.WARN)
+	logging.getLogger("urllib3").setLevel(logging.WARN)
+	if args.verbose == 1:	# Console Info Verbosity
+		ch.setLevel(logging.INFO)
+	if args.verbose >= 2:	# Debug Verbosity
+		ch.setLevel(logging.DEBUG)
+		logging.getLogger("requests").setLevel(logging.DEBUG)
+		logging.getLogger("urllib3").setLevel(logging.DEBUG)
+	if args.verbose >= 3:	# Highest current Verbosity level
+		fh.setLevel(logging.DEBUG)
+
+
 def startup():
+	'''Do basic setup for the program. This really should only be run once
+	but has some basic tests to prevent double-assignment'''
 	chdir(path.dirname(path.abspath(__file__)))
 	open(settings.logfile, 'w').close()
 	global args, logger, loop
@@ -82,26 +106,19 @@ def startup():
 
 	# Set up logging
 	logger = logging.getLogger()
-	logger.setLevel(logging.DEBUG)
-	ch = logging.StreamHandler()
-	# Set loglevel and format
-	ch.setLevel(logging.WARN)
-	if args.verbose > 0:
-		ch.setLevel(logging.INFO)
-	if args.verbose > 1:
-		ch.setLevel(logging.DEBUG)
-		logging.getLogger("requests").setLevel(logging.DEBUG)
-		logging.getLogger("urllib3").setLevel(logging.DEBUG)
-	ch.setFormatter(logging.Formatter("[%(levelname)8s] %(name)s: %(message)s"))
-	logger.addHandler(ch)
-	fh = logging.FileHandler(settings.logfile)
-	# Set loglevel and format
-	fh.setLevel(logging.INFO)
-	fh.setFormatter(logging.Formatter(
-		"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
-		"%Y-%m-%d %H:%M:%S"))
-	logger.addHandler(fh)
-	logger.debug('Logging set up.')
+	if len(logger.handlers) is 0:
+		logger.setLevel(logging.DEBUG)
+		ch = logging.StreamHandler()
+		ch.setFormatter(logging.Formatter(
+			"[%(levelname)8s] %(name)s: %(message)s"))
+		fh = logging.FileHandler(settings.logfile)
+		logger.addHandler(ch)
+		fh.setFormatter(logging.Formatter(
+			"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
+			"%Y-%m-%d %H:%M:%S"))
+		logger.addHandler(fh)
+		setLogLevel(True)
+		logger.debug('Logging set up.')
 	logger.debug('Args state: {}'.format(args))
 	logger.info('Badge check midlayer v{} starting on {} ({})'.format(
 		settings.version,
