@@ -1,5 +1,5 @@
 #!/bin/env python3
-import settings, logging, argparse, requests, asyncio
+import settings, logging, argparse, requests, asyncio, websockets
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -137,6 +137,18 @@ def startup():
 	except ValueError:
 		logger.fatal('API key not a valid UUID, refusing to run.')
 		raise SystemExit
+
+	global server
+	try:
+		server
+	except NameError:
+		server = loop.run_until_complete(websockets.serve(
+			prcsConnection,
+			'localhost',
+			getSetting('l_port')))
+		logger.info('Now listening for connections on {}:{}'.format(
+			'localhost',
+			getSetting('l_port')))
 
 
 if __name__ == '__main__':
