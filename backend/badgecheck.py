@@ -66,8 +66,11 @@ def parseargs():
 		'-E', '--no-expand-json', action='store_true', dest='minify',
 		help='Undo --expand-json')
 	parser.add_argument(
-		'-v', '--verbose', action='count', default=0,
+		'-v', action='count', default=0, dest='verbose',
 		help='Output more verbose info. Specify more than once to increase.')
+	parser.add_argument(
+		'--verbose', action='store', default=0, type=int, metavar='N',
+		help='Specify verbosity level explicitly. Set level to N.')
 	parser.add_argument(
 		'--debug', action='store_true',
 		help='Run with debug settings')
