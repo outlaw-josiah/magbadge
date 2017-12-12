@@ -79,7 +79,13 @@ def parseargs():
 
 def setLogLevel(firstRun=False):
 	'''Sets logging level based on the program verbosity state. Only cares
-	about the first StreamHandler or FileHandler attached to logger.'''
+	about the first StreamHandler or FileHandler attached to logger.
+	Logging levels:
+	0: Default. Only WARN+ are logged to console. File gets INFO+
+	1: Console loggs INFO+
+	2: Console logs DEBUG+
+	3: File logs DEBUG+
+	4: Sub-modules log DEBUG+'''
 	rootLogger = logging.getLogger()
 	ch = [h for h in rootLogger.handlers if type(h) is logging.StreamHandler][0]
 	fh = [h for h in rootLogger.handlers if type(h) is logging.FileHandler][0]
@@ -90,14 +96,17 @@ def setLogLevel(firstRun=False):
 	fh.setLevel(logging.INFO)
 	logging.getLogger("requests").setLevel(logging.WARN)
 	logging.getLogger("urllib3").setLevel(logging.WARN)
-	if args.verbose == 1:	# Console Info Verbosity
+	logging.getLogger("websockets").setLevel(logging.WARN)
+	if args.verbose == 1:
 		ch.setLevel(logging.INFO)
-	if args.verbose >= 2:	# Debug Verbosity
+	if args.verbose >= 2:
 		ch.setLevel(logging.DEBUG)
+	if args.verbose >= 3:
+		fh.setLevel(logging.DEBUG)
+	if args.verbose >= 4:
 		logging.getLogger("requests").setLevel(logging.DEBUG)
 		logging.getLogger("urllib3").setLevel(logging.DEBUG)
-	if args.verbose >= 3:	# Highest current Verbosity level
-		fh.setLevel(logging.DEBUG)
+		logging.getLogger("websockets").setLevel(logging.DEBUG)
 
 
 def startup():
