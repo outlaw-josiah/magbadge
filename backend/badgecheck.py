@@ -4,7 +4,7 @@ from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
 from uuid		import UUID
-from os			import path, chdir
+from os			import path, chdir as _chdir
 
 
 async def getAttndFromBadge(badge):
@@ -112,7 +112,7 @@ def setLogLevel(firstRun=False):
 def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
-	chdir(path.dirname(path.abspath(__file__)))
+	_chdir(path.dirname(path.abspath(__file__)))
 	open(settings.logfile, 'w').close()
 	global args, logger, loop
 	args = parseargs()
