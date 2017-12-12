@@ -58,7 +58,7 @@ def parseargs():
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
 		'-V', '--version', action='version',
-		version="%(prog)s v{}".format(settings.version))
+		version="%(prog)s v{}".format(settings.version_full))
 	parser.add_argument(
 		'-e', '--expand-json', action='store_false', dest='minify',
 		help='Add newlines and spacing to JSON responses')
