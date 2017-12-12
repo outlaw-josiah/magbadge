@@ -77,8 +77,9 @@ def parseargs():
 def setLogLevel(firstRun=False):
 	'''Sets logging level based on the program verbosity state. Only cares
 	about the first StreamHandler or FileHandler attached to logger.'''
-	ch = [h for h in logger.handlers if type(h) is logging.StreamHandler][0]
-	fh = [h for h in logger.handlers if type(h) is logging.FileHandler][0]
+	rootLogger = logging.getLogger()
+	ch = [h for h in rootLogger.handlers if type(h) is logging.StreamHandler][0]
+	fh = [h for h in rootLogger.handlers if type(h) is logging.FileHandler][0]
 	if not firstRun:
 		logger.warning("Changing log level")
 	# Set to default levels
@@ -106,18 +107,18 @@ def startup():
 	loop = asyncio.get_event_loop()
 
 	# Set up logging
-	logger = logging.getLogger()
-	if len(logger.handlers) is 0:
-		logger.setLevel(logging.DEBUG)
+	conFmt="[%(levelname)8s] %(name)s: %(message)s"
+	filFmt="%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
+	logger = logging.getLogger(__name__)
+	rootLogger = logging.getLogger()
+	if len(rootLogger.handlers) is 0:
+		rootLogger.setLevel(logging.DEBUG)
 		ch = logging.StreamHandler()
-		ch.setFormatter(logging.Formatter(
-			"[%(levelname)8s] %(name)s: %(message)s"))
+		ch.setFormatter(logging.Formatter(conFmt))
 		fh = logging.FileHandler(settings.logfile)
-		logger.addHandler(ch)
-		fh.setFormatter(logging.Formatter(
-			"%(asctime)s [%(levelname)8s] %(name)s: %(message)s",
-			"%Y-%m-%d %H:%M:%S"))
-		logger.addHandler(fh)
+		rootLogger.addHandler(ch)
+		fh.setFormatter(logging.Formatter(filFmt, "%Y-%m-%d %H:%M:%S"))
+		rootLogger.addHandler(fh)
 		setLogLevel(True)
 		logger.debug('Logging set up.')
 	logger.debug('Args state: {}'.format(args))
