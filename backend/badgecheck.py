@@ -28,8 +28,36 @@ async def getAttndFromBadge(badge):
 
 	logger.info('Looking up badge {}'.format(badge))
 	logger.debug(req)
-	futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
-	resp = await futr_resp
+	try:
+		futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
+		resp = await futr_resp
+	except requests.exceptions.ConnectTimeout:
+		resp = requests.Response()
+		resp.status_code = 598
+		resp.error = 'Connection timed out after {}ms'.format(
+			getSetting('timeout') * 1000)
+		logger.error(
+			'Connection timed out after {}ms'.format(getSetting('timeout') * 1000))
+		return resp
+	except requests.exceptions.ConnectionError as e:
+		resp = requests.Response()
+		resp.status_code = 504
+		resp.error = e.args[0]
+		logger.error(
+			'Failed to connect to {} \n'
+			'Header: {}\n'
+			'Error: {}'.format(
+				e.request.url,
+				e.request.headers,
+				e.args[0]
+			)
+		)
+		return resp
+	except Exception as e:
+		resp = requests.Response()
+		resp.status_code = 500
+		logger.critical(e)
+		return resp
 	logger.info('Server response was HTTP {}'.format(resp.status_code))
 	logger.debug(resp.text)
 
