@@ -5,6 +5,8 @@ from datetime	import datetime
 from functools	import partial
 from uuid		import UUID
 from os			import path, chdir as _chdir
+# Exceptions
+from requests.exceptions import ConnectTimeout, ConnectionError
 
 
 async def getAttndFromBadge(badge):
@@ -31,7 +33,7 @@ async def getAttndFromBadge(badge):
 	try:
 		futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
 		resp = await futr_resp
-	except requests.exceptions.ConnectTimeout:
+	except ConnectTimeout:
 		resp = requests.Response()
 		resp.status_code = 598
 		resp.error = 'Connection timed out after {}ms'.format(
@@ -39,7 +41,7 @@ async def getAttndFromBadge(badge):
 		logger.error(
 			'Connection timed out after {}ms'.format(getSetting('timeout') * 1000))
 		return resp
-	except requests.exceptions.ConnectionError as e:
+	except ConnectionError as e:
 		resp = requests.Response()
 		resp.status_code = 504
 		resp.error = e.args[0]
