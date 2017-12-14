@@ -201,3 +201,4 @@ def startup():
 
 if __name__ == '__main__':
 	startup()
+	loop.run_forever()
