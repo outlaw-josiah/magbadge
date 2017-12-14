@@ -1,11 +1,12 @@
 #!/bin/env python3
-import settings, logging, argparse, requests, asyncio, websockets
+import settings, logging, argparse, requests, asyncio, websockets, json
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
 from uuid		import UUID
 from os			import path, chdir as _chdir
 # Exceptions
+from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectTimeout, ConnectionError
 
 
@@ -72,6 +73,11 @@ async def prcsConnection(sock, path):
 		'Client connection opened at {}:{}'.format(*sock.remote_address))
 	while sock.open:
 		msg = await sock.recv()
+		try: msgJSON = json.loads(msg)
+		except JSONDecodeError as e:
+			logger.critical('Failed to decode: {}'.format(e.args[0]))
+			sock.send('{"status": 400, "error": "Valid JSON was not supplied"}'
+		break
 
 
 def getSetting(name):
