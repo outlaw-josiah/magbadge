@@ -8,6 +8,7 @@ from os			import path, chdir as _chdir
 # Exceptions
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectTimeout, ConnectionError
+from websockets.exceptions import ConnectionClosed
 
 
 async def getAttndFromBadge(badge):
@@ -71,13 +72,16 @@ async def prcsConnection(sock, path):
 	'''Process incoming connections'''
 	logger.debug(
 		'Client connection opened at {}:{}'.format(*sock.remote_address))
-	while sock.open:
-		msg = await sock.recv()
-		try: msgJSON = json.loads(msg)
-		except JSONDecodeError as e:
-			logger.critical('Failed to decode: {}'.format(e.args[0]))
-			sock.send('{"status": 400, "error": "Valid JSON was not supplied"}')
-		break
+	try:
+		while sock.open:
+			msg = await sock.recv()
+			try: msgJSON = json.loads(msg)
+			except JSONDecodeError as e:
+				logger.critical('Failed to decode: {}'.format(e.args[0]))
+				sock.send('{"status": 400, "error": "Valid JSON was not supplied"}')
+	except ConnectionClosed:
+		logger.debug(
+			'Connection {}:{} closed by client'.format(*sock.remote_address))
 
 
 def getSetting(name):
