@@ -163,8 +163,8 @@ def startup():
 	loop = asyncio.get_event_loop()
 
 	# Set up logging
-	conFmt="[%(levelname)8s] %(name)s: %(message)s"
-	filFmt="%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
+	conFmt = "[%(levelname)8s] %(name)s: %(message)s"
+	filFmt = "%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
 	logger = logging.getLogger(__name__)
 	rootLogger = logging.getLogger()
 	if len(rootLogger.handlers) is 0:
