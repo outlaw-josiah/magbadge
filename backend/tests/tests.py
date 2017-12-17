@@ -46,7 +46,7 @@ class FmtConversions(unittest.TestCase):
 
 
 class requestchecks(unittest.TestCase):
-	bnums = [10**x for x in range(0, 4)] + [x for x in range(20, 40)]
+	bnums = [10**x for x in range(0, 4)] + [x for x in range(20, 41)]
 	barcodes = [
 		"~R3FsDQ", "~IyWvWg", "~o3aPCw", "~RCYmuw", "~IQY/Vw", "~FqrOLA", "~Mf8CUA", "~OncJ2A",
 		"~fIdHsA", "~ye1h3g", "~rH4oQQ", "~7NDK/Q", "~CG5CMA", "~5KzC3g", "~TBFnbA", "~ZqD5ew",
