@@ -78,7 +78,7 @@ async def prcsConnection(sock, path):
 			resp = deepcopy(settings.generic_resp)
 			try: msgJSON = json.loads(msg)
 			except JSONDecodeError as e:
-				logger.critical(
+				logger.error(
 					'Failed to decode: \n'
 					'           {}\n'
 					'           {}'.format(msg, e.args[0]))
