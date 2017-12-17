@@ -1,4 +1,4 @@
-import unittest, logging, badgecheck as bdgchk, sys, asyncio
+import unittest, logging, badgecheck as bdgchk, sys, asyncio, random
 from json			import loads
 from datetime		import datetime
 from util			import fmtconvert
@@ -46,6 +46,11 @@ class FmtConversions(unittest.TestCase):
 
 
 class requestchecks(unittest.TestCase):
+	bnums = [10**x for x in range(0, 4)] + [x for x in range(20, 40)]
+	barcodes = [
+		"~R3FsDQ", "~IyWvWg", "~o3aPCw", "~RCYmuw", "~IQY/Vw", "~FqrOLA", "~Mf8CUA", "~OncJ2A",
+		"~fIdHsA", "~ye1h3g", "~rH4oQQ", "~7NDK/Q", "~CG5CMA", "~5KzC3g", "~TBFnbA", "~ZqD5ew",
+		"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
 	@classmethod
 	def setUpClass(cls):
 		bdgchk.logger = logging.getLogger()
@@ -61,7 +66,7 @@ class requestchecks(unittest.TestCase):
 		bdgchk.settings.magapi.headers['X-Auth-Token'] = ''
 
 	def test_viaBadgeNum(self):
-		for b in ([10**x for x in range(0, 4)] + [x for x in range(20, 40)]):
+		for b in random.sample(self.bnums,5):
 			with \
 			self.subTest("Badge {}".format(b)), \
 			open('tests/sampledata/b{}.json'.format(b)) as f:
@@ -72,16 +77,12 @@ class requestchecks(unittest.TestCase):
 
 	def test_viaScannedBadge(self):
 		self.maxDiff = None
-		barcodes = [
-			"~R3FsDQ", "~IyWvWg", "~o3aPCw", "~RCYmuw", "~IQY/Vw", "~FqrOLA", "~Mf8CUA", "~OncJ2A",
-			"~fIdHsA", "~ye1h3g", "~rH4oQQ", "~7NDK/Q", "~CG5CMA", "~5KzC3g", "~TBFnbA", "~ZqD5ew",
-			"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
-		for b in [x for x in range(20, 40)]:
+		for b in random.sample(self.bnums[4:],5):
 			with \
-			self.subTest("Badge {}".format(barcodes[b - 20])),\
+			self.subTest("Badge {}".format(self.barcodes[b - 20])),\
 			open('tests/sampledata/b{}.json'.format(b)) as f:
 				apidata = bdgchk.loop.run_until_complete(
-					bdgchk.getAttndFromBadge(barcodes[b - 20])).text
+					bdgchk.getAttndFromBadge(self.barcodes[b - 20])).text
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
 
