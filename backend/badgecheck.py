@@ -219,9 +219,9 @@ def sigint(signum, stack):
 	server.wait_closed()
 	logger.critical('Server shut down.')
 	exit()
-signal.signal(signal.SIGINT,sigint)
 
 
 if __name__ == '__main__':
 	startup()
+	signal.signal(signal.SIGINT, sigint)
 	loop.run_forever()
