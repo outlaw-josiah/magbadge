@@ -86,6 +86,7 @@ async def prcsConnection(sock, path):
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				sock.close()
+				continue
 	except ConnectionClosed:
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
