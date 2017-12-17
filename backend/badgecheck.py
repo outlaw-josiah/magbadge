@@ -78,9 +78,11 @@ async def prcsConnection(sock, path):
 			resp = deepcopy(settings.generic_resp)
 			try: msgJSON = json.loads(msg)
 			except JSONDecodeError as e:
-				logger.critical('Failed to decode: {}'.format(e.args[0]))
+				logger.critical(
+					'Failed to decode: \n'
+					'           {}'.format(e.args[0]))
 				resp['status'] = 400
-				resp['error'] = "Valid JSON was not supplied"
+				resp['error'] = 'Valid JSON was not supplied'
 				await sock.send(json.dumps(resp))
 				sock.close()
 	except ConnectionClosed:
