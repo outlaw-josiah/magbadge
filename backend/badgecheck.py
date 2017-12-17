@@ -101,6 +101,19 @@ async def prcsConnection(sock, path):
 				resp['error'] = settings.error.JSON_NOOP
 				await sock.send(json.dumps(resp))
 				continue
+			elif msgJSON['action'] == 'admin':
+				pass
+			elif msgJSON['action'] == 'query.badge':
+				pass
+			elif msgJSON['action'] == 'query.state':
+				pass
+			elif msgJSON['action'] == 'echo':
+				logger.warning(
+					'Echo request for data on connection {1}:{2}\n'
+					'{0}'.format(msg, *sock.remote_address))
+				resp['status'] = 200
+				resp['result'] = msgJSON
+				await sock.send(json.dumps(resp))
 	except ConnectionClosed:
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
