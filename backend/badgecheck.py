@@ -1,5 +1,5 @@
 #!/bin/env python3
-import settings, logging, argparse, requests, asyncio, websockets, json
+import settings, logging, argparse, requests, asyncio, websockets, json, signal
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -209,6 +209,17 @@ def startup():
 		logger.info('Now listening for connections on {}:{}'.format(
 			'localhost',
 			getSetting('l_port')))
+
+
+def sigint(signum, stack):
+	print()
+	logger.critical('Shutting down from SIGINT')
+	logger.critical('Shutting down websocket server.')
+	server.close()
+	server.wait_closed()
+	logger.critical('Server shut down.')
+	exit()
+signal.signal(signal.SIGINT,sigint)
 
 
 if __name__ == '__main__':
