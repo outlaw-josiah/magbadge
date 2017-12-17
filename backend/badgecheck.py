@@ -87,6 +87,20 @@ async def prcsConnection(sock, path):
 				await sock.send(json.dumps(resp))
 				sock.close()
 				continue
+			if type(msgJSON) != dict:
+				logger.error(
+					'JSON did not decode to a dict: \n'
+					'           {}'.format(msg))
+				resp['status'] = 400
+				resp['error'] = settings.error.JSON_invalid
+				await sock.send(json.dumps(resp))
+				continue
+			elif 'action' not in msgJSON:
+				logger.error('JSON did not include action: {}'.format(msg))
+				resp['status'] = 400
+				resp['error'] = settings.error.JSON_NOOP
+				await sock.send(json.dumps(resp))
+				continue
 	except ConnectionClosed:
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))

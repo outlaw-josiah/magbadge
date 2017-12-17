@@ -45,3 +45,4 @@ generic_resp = dict(status=500, error='', result={})
 
 class error:
 	JSON_invalid = 'Valid JSON was not supplied'
+	JSON_NOOP = 'JSON NOOP: No action given'
