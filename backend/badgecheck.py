@@ -168,7 +168,7 @@ def startup():
 
 	# Set up logging
 	conFmt = "[%(levelname)8s] %(name)s: %(message)s"
-	filFmt = "%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
+	filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
 	logger = logging.getLogger(__name__)
 	rootLogger = logging.getLogger()
 	if len(rootLogger.handlers) is 0:
@@ -177,7 +177,7 @@ def startup():
 		ch.setFormatter(logging.Formatter(conFmt))
 		fh = logging.FileHandler(settings.logfile)
 		rootLogger.addHandler(ch)
-		fh.setFormatter(logging.Formatter(filFmt, "%Y-%m-%d %H:%M:%S"))
+		fh.setFormatter(logging.Formatter(filFmt, "%b-%d %H:%M:%S"))
 		rootLogger.addHandler(fh)
 		setLogLevel(True)
 		logger.debug('Logging set up.')
