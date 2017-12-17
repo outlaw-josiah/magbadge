@@ -41,7 +41,8 @@ version = version_full.split('+')[0]
 version_meta = version_full.split('+')[1] if '+' in version_full else ''
 logfile = "server.log"
 generic_resp = dict(status=500, error='', result={})
-
+textwrap_conf = dict(
+	width=100, initial_indent=' ' * 11, subsequent_indent=' ' * 11)
 
 class error:
 	JSON_invalid = 'Valid JSON was not supplied'

@@ -1,5 +1,6 @@
 #!/bin/env python3
 import settings, logging, argparse, requests, asyncio, websockets, json, signal
+import textwrap
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -80,8 +81,10 @@ async def prcsConnection(sock, path):
 			except JSONDecodeError as e:
 				logger.error(
 					'Failed to decode: \n'
-					'           {}\n'
-					'           {}'.format(msg, e.args[0]))
+					'{}\n{}'.format(
+						textwrap.fill(msg, **settings.textwrap_conf),
+						textwrap.fill(e.args[0], **settings.textwrap_conf)
+					))
 				resp['status'] = 400
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
@@ -90,7 +93,8 @@ async def prcsConnection(sock, path):
 			if type(msgJSON) != dict:
 				logger.error(
 					'JSON did not decode to a dict: \n'
-					'           {}'.format(msg))
+					'{}'.format(textwrap.fill(msg, **settings.textwrap_conf)
+					))
 				resp['status'] = 400
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
@@ -110,7 +114,10 @@ async def prcsConnection(sock, path):
 			elif msgJSON['action'] == 'echo':
 				logger.warning(
 					'Echo request for data on connection {1}:{2}\n'
-					'{0}'.format(msg, *sock.remote_address))
+					'{0}'.format(
+						textwrap.fill(msg, **settings.textwrap_conf),
+						*sock.remote_address
+					))
 				resp['status'] = 200
 				resp['result'] = msgJSON
 				await sock.send(json.dumps(resp))
