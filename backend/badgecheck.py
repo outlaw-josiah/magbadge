@@ -195,12 +195,12 @@ def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
 	_chdir(path.dirname(path.abspath(__file__)))
-	open(settings.logfile, 'w').close()
 	global args, logger, loop
 	args = parseargs()
 	loop = asyncio.get_event_loop()
 
 	# Set up logging
+	open(settings.logfile, 'w').close()
 	conFmt = "[%(levelname)8s] %(name)s: %(message)s"
 	filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
 	logger = logging.getLogger(__name__)
