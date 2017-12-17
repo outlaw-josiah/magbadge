@@ -83,7 +83,7 @@ async def prcsConnection(sock, path):
 					'           {}\n'
 					'           {}'.format(msg, e.args[0]))
 				resp['status'] = 400
-				resp['error'] = 'Valid JSON was not supplied'
+				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				sock.close()
 	except ConnectionClosed:
