@@ -68,7 +68,7 @@ class requestchecks(unittest.TestCase):
 		bdgchk.settings.magapi.headers['X-Auth-Token'] = ''
 
 	def test_viaBadgeNum(self):
-		for b in random.sample(self.bnums,5):
+		for b in random.sample(self.bnums,3):
 			with \
 			self.subTest("Badge {}".format(b)), \
 			open('tests/sampledata/b{}.json'.format(b)) as f:
@@ -79,7 +79,7 @@ class requestchecks(unittest.TestCase):
 
 	def test_viaScannedBadge(self):
 		self.maxDiff = None
-		for b in random.sample(self.bnums[4:],5):
+		for b in random.sample(self.bnums[4:],3):
 			with \
 			self.subTest("Badge {}".format(self.barcodes[b - 20])),\
 			open('tests/sampledata/b{}.json'.format(b)) as f:
