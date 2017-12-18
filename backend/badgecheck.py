@@ -23,7 +23,7 @@ async def getAttndFromBadge(badge):
 		req = deepcopy(settings.magapi.barcode_lookup)
 	else:
 		if int(badge) < 0:
-			logger.warning('({}) is less than 0'.format(badge))
+			logger.error('({}) is less than 0'.format(badge))
 			raise ValueError('({}) is less than 0'.format(badge))
 		req = deepcopy(settings.magapi.lookup)
 	req['params'][0] = str(badge)
