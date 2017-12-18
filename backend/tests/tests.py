@@ -95,6 +95,13 @@ class requestchecks(unittest.TestCase):
 			'Not a valid badge string',
 			context.exception.args)
 
+	def test_emptyString(self):
+		with self.assertRaises(ValueError) as context:
+			self.loop.run_until_complete(bdgchk.getAttndFromBadge(""))
+		self.assertIn(
+			'Not a valid badge string',
+			context.exception.args)
+
 	def test_badInt(self):
 		with self.assertRaises(ValueError) as context:
 			self.loop.run_until_complete(bdgchk.getAttndFromBadge(-1))

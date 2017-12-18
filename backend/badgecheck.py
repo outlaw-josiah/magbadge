@@ -17,7 +17,7 @@ async def getAttndFromBadge(badge):
 	otherwise raises a ValueError, then queries the MAGAPI for the
 	associated attendee'''
 	if type(badge) == str:
-		if badge[0] != '~':
+		if len(badge) == 0 or badge[0] != '~':
 			logger.error('({}) is not a valid badge string'.format(badge))
 			raise ValueError('Not a valid badge string', badge)
 		req = deepcopy(settings.magapi.barcode_lookup)
