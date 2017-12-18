@@ -52,7 +52,7 @@ class requestchecks(unittest.TestCase):
 		"~fIdHsA", "~ye1h3g", "~rH4oQQ", "~7NDK/Q", "~CG5CMA", "~5KzC3g", "~TBFnbA", "~ZqD5ew",
 		"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
 	@classmethod
-	def setUpClass(cls):
+	def setUpClass(self):
 		bdgchk.logger = logging.getLogger()
 		bdgchk.args = Namespace(verbose=0, minify=True, debug=True)
 		bdgchk.loop = asyncio.get_event_loop()
@@ -60,7 +60,7 @@ class requestchecks(unittest.TestCase):
 			bdgchk.settings.magapi.headers['X-Auth-Token'] = f.read().strip()
 
 	@classmethod
-	def tearDownClass(cls):
+	def tearDownClass(self):
 		bdgchk.logger = None
 		bdgchk.args = None
 		bdgchk.settings.magapi.headers['X-Auth-Token'] = ''
