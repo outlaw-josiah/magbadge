@@ -164,7 +164,7 @@ def setLogLevel(firstRun=False):
 	about the first StreamHandler or FileHandler attached to logger.
 	Logging levels:
 	0: Default. Only WARN+ are logged to console. File gets INFO+
-	1: Console loggs INFO+
+	1: Console logs INFO+
 	2: Console logs DEBUG+
 	3: File logs DEBUG+
 	4: Sub-modules log DEBUG+'''
