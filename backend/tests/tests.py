@@ -1,4 +1,5 @@
 import unittest, logging, badgecheck as bdgchk, sys, asyncio, random
+from unittest.mock	import MagicMock
 from json			import loads
 from datetime		import datetime
 from util			import fmtconvert
@@ -53,9 +54,10 @@ class requestchecks(unittest.TestCase):
 		"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
 	@classmethod
 	def setUpClass(self):
-		bdgchk.logger = logging.getLogger()
+		bdgchk.logger = MagicMock(spec=logging.getLogger())
 		bdgchk.args = Namespace(verbose=0, minify=True, debug=True)
-		bdgchk.loop = asyncio.get_event_loop()
+		self.loop = asyncio.get_event_loop()
+		bdgchk.loop = self.loop
 		with open('apikey.txt') as f:
 			bdgchk.settings.magapi.headers['X-Auth-Token'] = f.read().strip()
 
@@ -70,7 +72,7 @@ class requestchecks(unittest.TestCase):
 			with \
 			self.subTest("Badge {}".format(b)), \
 			open('tests/sampledata/b{}.json'.format(b)) as f:
-				apidata = bdgchk.loop.run_until_complete(
+				apidata = self.loop.run_until_complete(
 					bdgchk.getAttndFromBadge(b)).text
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
@@ -81,7 +83,7 @@ class requestchecks(unittest.TestCase):
 			with \
 			self.subTest("Badge {}".format(self.barcodes[b - 20])),\
 			open('tests/sampledata/b{}.json'.format(b)) as f:
-				apidata = bdgchk.loop.run_until_complete(
+				apidata = self.loop.run_until_complete(
 					bdgchk.getAttndFromBadge(self.barcodes[b - 20])).text
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
