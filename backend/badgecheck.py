@@ -27,7 +27,8 @@ async def getAttndFromBadge(badge):
 			raise ValueError('({}) is less than 0'.format(badge))
 		req = deepcopy(settings.magapi.lookup)
 	else:
-		raise ValueError('Data was not an integer or a string (HOW???)',badge)
+		logger.error('({}) not an integer or a string'.format(badge))
+		raise ValueError('Data was not an integer or a string',badge)
 	req['params'][0] = str(badge)
 	kwargs = dict(
 		url=getSetting('url'),

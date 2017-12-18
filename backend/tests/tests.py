@@ -106,7 +106,7 @@ class requestchecks(unittest.TestCase):
 		with self.assertRaises(ValueError) as context:
 			self.loop.run_until_complete(bdgchk.getAttndFromBadge({}))
 		self.assertIn(
-			'Data was not an integer or a string (HOW???)',
+			'Data was not an integer or a string',
 			context.exception.args)
 
 
