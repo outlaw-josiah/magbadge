@@ -114,7 +114,8 @@ async def prcsConnection(sock, path):
 			elif msgJSON['action'] == 'admin':
 				pass
 			elif msgJSON['action'] == 'query.badge':
-				pass
+				await getBadge(sock, msgJSON['params'], resp)
+				continue
 			elif msgJSON['action'] == 'query.state':
 				pass
 			elif msgJSON['action'] == 'echo':
@@ -130,6 +131,18 @@ async def prcsConnection(sock, path):
 	except ConnectionClosed:
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
+
+
+async def getBadge(sock, badge, resp):
+	try: data = await getAttndFromBadge(badge)
+	except ValueError as e:
+		resp['status'] = 400
+		resp['error'] = e.args
+		await sock.send(json.dumps(resp))
+		return
+	if not data.ok or 'error' in data: pass
+	resp['result'] = data.text
+	await sock.send(json.dumps(resp))
 
 
 def getSetting(name):
