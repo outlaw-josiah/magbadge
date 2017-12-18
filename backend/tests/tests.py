@@ -88,6 +88,27 @@ class requestchecks(unittest.TestCase):
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
 
+	def test_badString(self):
+		with self.assertRaises(ValueError) as context:
+			self.loop.run_until_complete(bdgchk.getAttndFromBadge("AAA"))
+		self.assertIn(
+			'Not a valid badge string',
+			context.exception.args)
+
+	def test_badInt(self):
+		with self.assertRaises(ValueError) as context:
+			self.loop.run_until_complete(bdgchk.getAttndFromBadge(-1))
+		self.assertIn(
+			'(-1) is less than 0',
+			context.exception.args)
+
+	def test_badData(self):
+		with self.assertRaises(ValueError) as context:
+			self.loop.run_until_complete(bdgchk.getAttndFromBadge({}))
+		self.assertIn(
+			'Data was not an integer or a string (HOW???)',
+			context.exception.args)
+
 
 class testSettings(unittest.TestCase):
 	@classmethod

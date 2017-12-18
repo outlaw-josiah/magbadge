@@ -19,13 +19,15 @@ async def getAttndFromBadge(badge):
 	if type(badge) == str:
 		if badge[0] != '~':
 			logger.error('({}) is not a valid badge string'.format(badge))
-			raise ValueError('({}) is not a valid badge string'.format(badge))
+			raise ValueError('Not a valid badge string', badge)
 		req = deepcopy(settings.magapi.barcode_lookup)
-	else:
+	elif type(badge) == int:
 		if int(badge) < 0:
 			logger.error('({}) is less than 0'.format(badge))
 			raise ValueError('({}) is less than 0'.format(badge))
 		req = deepcopy(settings.magapi.lookup)
+	else:
+		raise ValueError('Data was not an integer or a string (HOW???)',badge)
 	req['params'][0] = str(badge)
 	kwargs = dict(
 		url=getSetting('url'),
