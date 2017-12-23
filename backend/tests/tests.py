@@ -137,6 +137,22 @@ class requestchecks(unittest.TestCase):
 			'Connection timed out after {}ms'.format(
 				bdgchk.getSetting('timeout') * 1000))
 
+	def test_connectionError(self):
+		bdgchk.logger.error.reset_mock()
+		ce = bdgchk.requests.exceptions.ConnectionError('')
+		ce.request = bdgchk.requests.Request()
+		bdgchk.requests.post = MagicMock(side_effect=ce)
+
+		expected = bdgchk.requests.Response()
+		expected.status_code = 504
+		expected.error = ''
+		actual = self.loop.run_until_complete(bdgchk.getAttndFromBadge(1))
+
+		self.assertEqual(expected.error, actual.error)
+		self.assertEqual(expected.status_code, actual.status_code)
+		bdgchk.logger.error.assert_called_once_with(
+			'Failed to connect to None \nHeader: {}\nError: ')
+
 
 class testSettings(unittest.TestCase):
 	@classmethod
