@@ -28,7 +28,7 @@ async def getAttndFromBadge(badge):
 		req = deepcopy(settings.magapi.lookup)
 	else:
 		logger.error('({}) not an integer or a string'.format(badge))
-		raise ValueError('Data was not an integer or a string',badge)
+		raise ValueError('Data was not an integer or a string', badge)
 	req['params'][0] = str(badge)
 	kwargs = dict(
 		url=getSetting('url'),
@@ -99,7 +99,8 @@ async def prcsConnection(sock, path):
 			if type(msgJSON) != dict:
 				logger.error(
 					'JSON did not decode to a dict: \n'
-					'{}'.format(textwrap.fill(msg, **settings.textwrap_conf)
+					'{}'.format(
+						textwrap.fill(msg, **settings.textwrap_conf)
 					))
 				resp['status'] = 400
 				resp['error'] = settings.error.JSON_invalid
