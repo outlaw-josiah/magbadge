@@ -1,4 +1,10 @@
-import unittest, logging, badgecheck as bdgchk, sys, asyncio, random
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0,parentdir)
+
+import badgecheck as bdgchk
+import unittest, logging, sys, asyncio, random, warnings
 from unittest.mock	import MagicMock
 from json			import loads
 from datetime		import datetime
@@ -148,3 +154,7 @@ class testSettings(unittest.TestCase):
 		self.assertEqual(
 			bdgchk.settings.runtime.logfile_suf,
 			bdgchk.getSetting('logfile_suf'))
+
+if __name__ == '__main__':
+	warnings.filterwarnings('ignore',category=DeprecationWarning)
+	unittest.main()
