@@ -123,6 +123,7 @@ class requestchecks(unittest.TestCase):
 			context.exception.args)
 
 	def test_timeout(self):
+		bdgchk.logger.error.reset_mock()
 		bdgchk.requests.post = MagicMock(
 			side_effect=bdgchk.requests.exceptions.ConnectTimeout())
 		expected = bdgchk.requests.Response()
@@ -132,6 +133,10 @@ class requestchecks(unittest.TestCase):
 		actual = self.loop.run_until_complete(bdgchk.getAttndFromBadge(1))
 		self.assertEqual(expected.error, actual.error)
 		self.assertEqual(expected.status_code, actual.status_code)
+		bdgchk.logger.error.assert_called_once_with(
+			'Connection timed out after {}ms'.format(
+				bdgchk.getSetting('timeout') * 1000))
+
 
 class testSettings(unittest.TestCase):
 	@classmethod
