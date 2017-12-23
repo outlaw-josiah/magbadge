@@ -122,6 +122,16 @@ class requestchecks(unittest.TestCase):
 			'Data was not an integer or a string',
 			context.exception.args)
 
+	def test_timeout(self):
+		bdgchk.requests.post = MagicMock(
+			side_effect=bdgchk.requests.exceptions.ConnectTimeout())
+		expected = bdgchk.requests.Response()
+		expected.status_code = 598
+		expected.error = 'Connection timed out after {}ms'.format(
+			bdgchk.getSetting('timeout') * 1000)
+		actual = self.loop.run_until_complete(bdgchk.getAttndFromBadge(1))
+		self.assertEqual(expected.error, actual.error)
+		self.assertEqual(expected.status_code, actual.status_code)
 
 class testSettings(unittest.TestCase):
 	@classmethod
