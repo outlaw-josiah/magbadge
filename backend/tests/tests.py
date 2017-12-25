@@ -60,6 +60,7 @@ class requestchecks(unittest.TestCase):
 		"~vM3AZw", "~D/0JmQ", "~Ef3y6Q", "~nE1GAw", "~jubaeA"]
 	@classmethod
 	def setUpClass(self):
+		self.maxDiff = None
 		bdgchk.logger = MagicMock(spec=logging.getLogger())
 		bdgchk.args = Namespace(verbose=0, minify=True, debug=True)
 		self.loop = asyncio.get_event_loop()
@@ -84,7 +85,6 @@ class requestchecks(unittest.TestCase):
 				self.assertEqual(loads(apidata), loads(sampledata))
 
 	def test_viaScannedBadge(self):
-		self.maxDiff = None
 		for b in random.sample(self.bnums[4:],3):
 			with \
 			self.subTest("Badge {}".format(self.barcodes[b - 20])),\
