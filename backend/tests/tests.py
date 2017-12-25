@@ -74,6 +74,7 @@ class requestchecks(unittest.TestCase):
 		bdgchk.args = None
 		bdgchk.settings.magapi.headers['X-Auth-Token'] = ''
 
+	@unittest.expectedFailure
 	def test_viaBadgeNum(self):
 		for b in random.sample(self.bnums,3):
 			with \
@@ -84,6 +85,7 @@ class requestchecks(unittest.TestCase):
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
 
+	@unittest.expectedFailure
 	def test_viaScannedBadge(self):
 		for b in random.sample(self.bnums[4:],3):
 			with \
