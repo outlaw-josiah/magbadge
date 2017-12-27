@@ -184,10 +184,11 @@ def setLogLevel(firstRun=False):
 	about the first StreamHandler or FileHandler attached to logger.
 	Logging levels:
 	0: Default. Only WARN+ are logged to console. File gets INFO+
-	1: Console logs INFO+
-	2: Console logs DEBUG+
-	3: File logs DEBUG+
-	4: Sub-modules log DEBUG+'''
+		Sub-modules get only CRITICAL
+	1: Console logs INFO+      4: Sub-modules log WARN+
+	2: File/Con logs DEBUG+    5: Sub-modules log INFO+
+	3: Sub-modules log ERROR+  6: Sub-modules log DEBUG+
+	'''
 	rootLogger = logging.getLogger()
 	ch = [h for h in rootLogger.handlers if type(h) is logging.StreamHandler][0]
 	fh = [h for h in rootLogger.handlers if type(h) is logging.FileHandler][0]
@@ -196,19 +197,36 @@ def setLogLevel(firstRun=False):
 	# Set to default levels
 	ch.setLevel(logging.WARN)
 	fh.setLevel(logging.INFO)
-	logging.getLogger("requests").setLevel(logging.WARN)
-	logging.getLogger("urllib3").setLevel(logging.WARN)
-	logging.getLogger("websockets").setLevel(logging.WARN)
+	logging.getLogger("requests").setLevel(logging.CRITICAL)
+	logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+	logging.getLogger("websockets").setLevel(logging.CRITICAL)
 	if args.verbose == 1:
 		ch.setLevel(logging.INFO)
 	if args.verbose >= 2:
 		ch.setLevel(logging.DEBUG)
-	if args.verbose >= 3:
 		fh.setLevel(logging.DEBUG)
-	if args.verbose >= 4:
-		logging.getLogger("requests").setLevel(logging.DEBUG)
-		logging.getLogger("urllib3").setLevel(logging.DEBUG)
-		logging.getLogger("websockets").setLevel(logging.DEBUG)
+	# Only bother if the level for these would be changed
+	if args.verbose >= 3:
+		if args.verbose == 3:
+			level = logging.ERROR
+			logging.getLogger("requests").setLevel(level)
+			logging.getLogger("urllib3").setLevel(level)
+			logging.getLogger("websockets").setLevel(level)
+		elif args.verbose == 4:
+			level = logging.WARN
+			logging.getLogger("requests").setLevel(level)
+			logging.getLogger("urllib3").setLevel(level)
+			logging.getLogger("websockets").setLevel(level)
+		elif args.verbose == 5:
+			level = logging.INFO
+			logging.getLogger("requests").setLevel(level)
+			logging.getLogger("urllib3").setLevel(level)
+			logging.getLogger("websockets").setLevel(level)
+		elif args.verbose >= 6:
+			level = logging.DEBUG
+			logging.getLogger("requests").setLevel(level)
+			logging.getLogger("urllib3").setLevel(level)
+			logging.getLogger("websockets").setLevel(level)
 
 
 def startup():
