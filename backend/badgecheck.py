@@ -141,7 +141,17 @@ async def getBadge(sock, badge, resp):
 		resp['error'] = e.args
 		await sock.send(json.dumps(resp))
 		return
-	if not data.ok or 'error' in data: pass
+	if not data.ok or hasattr(data, 'error'):
+		resp['status'] = 500 if data.ok else data.status_code
+		resp['error'] = getattr(data, 'error', 'Unknown error')
+		await sock.send(json.dumps(resp))
+		return
+	dataJSON = data.json()['result']
+	if 'error' in dataJSON:
+		resp['status'] = 400
+		resp['error'] = dataJSON['error']
+		await sock.send(json.dumps(resp))
+		return
 	resp['result'] = data.text
 	await sock.send(json.dumps(resp))
 
