@@ -5,7 +5,7 @@ from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
 from uuid		import UUID
-from os			import path, chdir as _chdir
+from os			import path, chdir as _chdir, makedirs as _makedirs
 # Exceptions
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectTimeout, ConnectionError
@@ -277,6 +277,7 @@ def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
 	_chdir(path.dirname(path.abspath(__file__)))
+	_makedirs("logs", exist_ok=True)
 	global args, logger, loop
 	args = parseargs()
 	loop = asyncio.get_event_loop()
