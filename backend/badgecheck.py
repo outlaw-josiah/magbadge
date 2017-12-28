@@ -129,6 +129,8 @@ async def prcsConnection(sock, path):
 				resp['status'] = 200
 				resp['result'] = msgJSON
 				await sock.send(json.dumps(resp))
+			else:
+				await sock.send("")
 	except ConnectionClosed:
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
