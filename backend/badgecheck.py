@@ -148,6 +148,7 @@ async def getBadge(sock, badge, resp):
 		resp['error'] = getattr(data, 'error', 'Unknown error')
 		await sock.send(json.dumps(resp))
 		return
+	# Load data as a dict
 	dataJSON = data.json()['result']
 	if 'error' in dataJSON:
 		resp['status'] = 400
