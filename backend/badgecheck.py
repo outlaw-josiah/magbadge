@@ -155,8 +155,39 @@ async def getBadge(sock, badge, resp):
 		resp['error'] = dataJSON['error']
 		await sock.send(json.dumps(resp))
 		return
-	resp['result'] = data.text
+	resp['status'] = 200
+	resp['result'] = simplifyBadge(dataJSON)
 	await sock.send(json.dumps(resp))
+
+
+def simplifyBadge(data):
+	'''Simplify the response from the MAG API'''
+	result = dict(
+		badge_num = data['badge_num'], staff = data['staffing'],
+		hr_worked = data['worked_hours'], hr_total = data['weighted_hours'],
+		ribbons = data['ribbon_labels'], dept_head = data['is_dept_head'],
+		name =
+			data['badge_printed_name']
+			if (data['badge_printed_name'] != "")
+			else data['full_name'],
+	)
+	if data['food_restrictions'] != None:
+		food = data['food_restrictions']
+		if len(food['sandwich_pref_labels']) > 1:
+			logger.warning('Badge {:>04} had multiple sandwiches: {}'.format(
+				badge,
+				food['sandwich_pref_labels']
+			))
+		result['sandwich'] = food['sandwich_pref_labels'][0]
+		result['restrict'] = (
+			food['freeform']
+			if food['freeform'] != str()
+			else 'None')
+	else:
+		result['sandwich'] = 'None'
+		result['restrict'] = 'None'
+
+	return result
 
 
 def getSetting(name):
