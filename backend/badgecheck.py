@@ -163,15 +163,15 @@ async def getBadge(sock, badge, resp):
 def simplifyBadge(data):
 	'''Simplify the response from the MAG API'''
 	result = dict(
-		badge_num = data['badge_num'], staff = data['staffing'],
-		hr_worked = data['worked_hours'], hr_total = data['weighted_hours'],
-		ribbons = data['ribbon_labels'], dept_head = data['is_dept_head'],
-		name =
+		badge_num=data['badge_num'], staff=data['staffing'],
+		hr_worked=data['worked_hours'], hr_total=data['weighted_hours'],
+		ribbons=data['ribbon_labels'], dept_head=data['is_dept_head'],
+		name=
 			data['badge_printed_name']
 			if (data['badge_printed_name'] != "")
 			else data['full_name'],
 	)
-	if data['food_restrictions'] != None:
+	if data['food_restrictions'] is not None:
 		food = data['food_restrictions']
 		if len(food['sandwich_pref_labels']) > 1:
 			logger.warning('Badge {:>04} had multiple sandwiches: {}'.format(
