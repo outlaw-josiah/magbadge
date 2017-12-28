@@ -157,6 +157,7 @@ async def getBadge(sock, badge, resp):
 		return
 	resp['status'] = 200
 	resp['result'] = simplifyBadge(dataJSON)
+	recordBadge(resp['result'])
 	await sock.send(json.dumps(resp))
 
 
@@ -188,6 +189,22 @@ def simplifyBadge(data):
 		result['restrict'] = 'None'
 
 	return result
+
+
+def recordBadge(data):
+	'''Take simplified data and record it to CSV'''
+	now = datetime.now()
+	filename = "logs/{}{}_scans.csv".format(
+		getSetting('logfile_pre'),
+		now.date())
+	line = (
+		"{0},{badge_num},{name},{dept_head},{staff},{hr_worked},{hr_total}"
+		"\n".format(now, **data))
+	if not path.isfile(filename):
+		with open(filename, 'w') as file:
+			file.write("Time,Badge,Name,Dept Head,Staff,Worked hr,Total hr\n")
+	with open(filename, 'a') as file:
+		file.write(line)
 
 
 def getSetting(name):
