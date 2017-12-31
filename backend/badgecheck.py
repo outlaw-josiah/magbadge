@@ -167,6 +167,7 @@ def simplifyBadge(data):
 		badge_num=data['badge_num'], staff=data['staffing'],
 		hr_worked=data['worked_hours'], hr_total=data['weighted_hours'],
 		ribbons=data['ribbon_labels'], dept_head=data['is_dept_head'],
+		badge_t=data['badge_type_label'],
 		name=
 			data['badge_printed_name']
 			if (data['badge_printed_name'] != "")
