@@ -36,7 +36,7 @@ class magapi:
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
 from setuptools_scm import get_version
-version_full = get_version(root='..')
+version_full = "2.0.0rc1"
 version = version_full.split('+')[0]
 version_meta = version_full.split('+')[1] if '+' in version_full else ''
 logfile = "logs/server.log"
