@@ -43,6 +43,7 @@ logfile = "logs/server.log"
 generic_resp = dict(status=500, error='', result={})
 textwrap_conf = dict(
 	width=100, initial_indent=' ' * 11, subsequent_indent=' ' * 11)
+mealtimes=['breakfast', 'lunch', 'dinner', 'overnights', 'undefined']
 
 class error:
 	JSON_invalid = 'Valid JSON was not supplied'
