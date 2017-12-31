@@ -180,13 +180,13 @@ def simplifyBadge(data):
 				food['sandwich_pref_labels']
 			))
 		result['sandwich'] = food['sandwich_pref_labels'][0]
-		result['restrict'] = (
-			food['freeform']
-			if food['freeform'] != str()
-			else 'None')
+		result['restrict'] = [
+			food['freeform'] if food['freeform'] != str() else 'None',
+			food['standard_labels']
+			]
 	else:
 		result['sandwich'] = 'None'
-		result['restrict'] = 'None'
+		result['restrict'] = ['None', []]
 
 	return result
 
