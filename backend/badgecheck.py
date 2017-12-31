@@ -200,11 +200,12 @@ def recordBadge(data):
 		getSetting('logfile_pre'),
 		now.date())
 	line = (
-		"{0},{badge_num},{name},{dept_head},{staff},{hr_worked},{hr_total}"
-		"\n".format(now, **data))
+		"{0}|{badge_num}|{name}|{dept_head}|{staff}|{hr_worked}|{hr_total}|"
+		"{ribbons}\n".format(now, **data))
 	if not path.isfile(filename):
 		with open(filename, 'w') as file:
-			file.write("Time,Badge,Name,Dept Head,Staff,Worked hr,Total hr\n")
+			file.write(
+				"Time|Badge|Name|Dept Head|Staff|Worked hr|Total hr|Ribbons\n")
 	with open(filename, 'a') as file:
 		file.write(line)
 
