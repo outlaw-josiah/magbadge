@@ -1,6 +1,6 @@
 #!/bin/env python3
 import settings, logging, argparse, requests, asyncio, websockets, json, signal
-import textwrap
+import textwrap, socket
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -352,7 +352,7 @@ def startup():
 	except NameError:
 		server = loop.run_until_complete(websockets.serve(
 			prcsConnection,
-			'localhost',
+			socket.gethostbyname(socket.getfqdn()),
 			getSetting('l_port')))
 		logger.info('Now listening for connections on {}:{}'.format(
 			*server.sockets[0].getsockname()
