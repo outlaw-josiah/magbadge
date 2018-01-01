@@ -12,7 +12,7 @@ from requests.exceptions import ConnectTimeout, ConnectionError
 from websockets.exceptions import ConnectionClosed
 
 
-async def getAttndFromBadge(badge):
+async def getAttndFromMAGAPI(badge):
 	'''Takes a string that can be scanned barcode or a positive number,
 	otherwise raises a ValueError, then queries the MAGAPI for the
 	associated attendee'''
@@ -143,7 +143,7 @@ async def prcsConnection(sock, path):
 
 
 async def getBadge(sock, badge, resp):
-	try: data = await getAttndFromBadge(badge)
+	try: data = await getAttndFromMAGAPI(badge)
 	except ValueError as e:
 		resp['status'] = 400
 		resp['error'] = e.args
