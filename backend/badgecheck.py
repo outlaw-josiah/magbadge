@@ -79,10 +79,12 @@ async def prcsConnection(sock, path):
 	'''Process incoming connections'''
 	logger.debug(
 		'Client connection opened at {}:{}'.format(*sock.remote_address))
+	sock.meal = 'undefined'
 	try:
 		while sock.open:
 			msg = await sock.recv()
 			resp = deepcopy(settings.generic_resp)
+
 			try: msgJSON = json.loads(msg)
 			except JSONDecodeError as e:
 				logger.error(
@@ -106,7 +108,11 @@ async def prcsConnection(sock, path):
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				continue
-			elif 'action' not in msgJSON:
+
+			# Done error checking, begin actual code
+			if 'meal' in msgJSON and msgJSON['meal'] in settings.mealtimes:
+				sock.meal = msgJSON['meal']
+			if 'action' not in msgJSON:
 				logger.error('JSON did not include action: {}'.format(msg))
 				resp['status'] = 400
 				resp['error'] = settings.error.JSON_NOOP
@@ -157,7 +163,7 @@ async def getBadge(sock, badge, resp):
 		return
 	resp['status'] = 200
 	resp['result'] = simplifyBadge(dataJSON)
-	recordBadge(resp['result'])
+	recordBadge(resp['result'], sock.meal)
 	await sock.send(json.dumps(resp))
 
 
@@ -194,12 +200,14 @@ def simplifyBadge(data):
 	return result
 
 
-def recordBadge(data):
+def recordBadge(data, meal):
 	'''Take simplified data and record it to CSV'''
 	now = datetime.now()
-	filename = "logs/{}{}_scans.csv".format(
+	filename = "logs/{}{}{}_scans.csv".format(
 		getSetting('logfile_pre'),
-		now.date())
+		now.date(),
+		("_" + meal) if meal != 'undefined' else ''
+	)
 	line = (
 		"{0}|{badge_num}|{name}|{dept_head}|{staff}|{hr_worked}|{hr_total}|"
 		"{ribbons}\n".format(now, **data))
