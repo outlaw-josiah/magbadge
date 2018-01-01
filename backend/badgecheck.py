@@ -85,6 +85,7 @@ async def prcsConnection(sock, path):
 			msg = await sock.recv()
 			resp = deepcopy(settings.generic_resp)
 
+			# Load JSON and error check it
 			try: msgJSON = json.loads(msg)
 			except JSONDecodeError as e:
 				logger.error(
@@ -138,6 +139,7 @@ async def prcsConnection(sock, path):
 			else:
 				await sock.send("")
 	except ConnectionClosed:
+		# Healthy error, log in debug mode but otherwise ignore
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
 
