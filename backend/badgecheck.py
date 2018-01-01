@@ -355,8 +355,8 @@ def startup():
 			'localhost',
 			getSetting('l_port')))
 		logger.info('Now listening for connections on {}:{}'.format(
-			'localhost',
-			getSetting('l_port')))
+			*server.sockets[0].getsockname()
+		))
 
 
 def sigint(signum, stack):
