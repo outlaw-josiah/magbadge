@@ -119,16 +119,20 @@ async def prcsConnection(sock, path):
 				resp['error'] = settings.error.JSON_NOOP
 				await sock.send(json.dumps(resp))
 				continue
+			# TODO: System admin level change
 			elif msgJSON['action'] == 'admin':
 				pass
+			# Badge lookup
 			elif msgJSON['action'] == 'query.badge':
 				valid = await getBadge(sock, msgJSON['params'], resp)
 				await sock.send(json.dumps(resp))
 				if valid:
 					recordBadge(resp['result'], sock.meal)
 				continue
+			# TODO: System state lookup
 			elif msgJSON['action'] == 'query.state':
 				pass
+			# Wrap the request into a response and send back
 			elif msgJSON['action'] == 'echo':
 				logger.warning(
 					'Echo request for data on connection {1}:{2}\n'
@@ -139,6 +143,7 @@ async def prcsConnection(sock, path):
 				resp['status'] = 200
 				resp['result'] = msgJSON
 				await sock.send(json.dumps(resp))
+			# Not a valid action, send a response to the client and continue
 			else:
 				await sock.send("")
 	except ConnectionClosed:
