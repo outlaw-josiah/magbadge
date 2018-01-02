@@ -94,7 +94,7 @@ async def prcsConnection(sock, path):
 						textwrap.fill(msg, **settings.textwrap_conf),
 						textwrap.fill(e.args[0], **settings.textwrap_conf)
 					))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				sock.close()
@@ -105,7 +105,7 @@ async def prcsConnection(sock, path):
 					'{}'.format(
 						textwrap.fill(msg, **settings.textwrap_conf)
 					))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				continue
@@ -115,7 +115,7 @@ async def prcsConnection(sock, path):
 				sock.meal = msgJSON['meal']
 			if 'action' not in msgJSON:
 				logger.error('JSON did not include action: {}'.format(msg))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_NOOP
 				await sock.send(json.dumps(resp))
 				continue
@@ -140,7 +140,7 @@ async def prcsConnection(sock, path):
 						textwrap.fill(msg, **settings.textwrap_conf),
 						*sock.remote_address
 					))
-				resp['status'] = 200
+				resp['status'] = requests.status_codes.codes.OK
 				resp['result'] = msgJSON
 				await sock.send(json.dumps(resp))
 			# Not a valid action, send a response to the client and continue
@@ -160,7 +160,7 @@ async def getBadge(sock, badge, resp):
 	TRUE'''
 	try: data = await getAttndFromMAGAPI(badge)
 	except ValueError as e:
-		resp['status'] = 400
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = e.args
 		return False
 	if not data.ok or hasattr(data, 'error'):
@@ -170,10 +170,10 @@ async def getBadge(sock, badge, resp):
 	# Load data as a dict
 	dataJSON = data.json()['result']
 	if 'error' in dataJSON:
-		resp['status'] = 400
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = dataJSON['error']
 		return False
-	resp['status'] = 200
+	resp['status'] = requests.status_codes.codes.OK
 	resp['result'] = simplifyBadge(dataJSON)
 	return True
 
