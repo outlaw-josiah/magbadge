@@ -122,7 +122,10 @@ async def prcsConnection(sock, path):
 			elif msgJSON['action'] == 'admin':
 				pass
 			elif msgJSON['action'] == 'query.badge':
-				await getBadge(sock, msgJSON['params'], resp)
+				valid = await getBadge(sock, msgJSON['params'], resp)
+				await sock.send(json.dumps(resp))
+				if valid:
+					recordBadge(resp['result'], sock.meal)
 				continue
 			elif msgJSON['action'] == 'query.state':
 				pass
@@ -149,24 +152,20 @@ async def getBadge(sock, badge, resp):
 	except ValueError as e:
 		resp['status'] = 400
 		resp['error'] = e.args
-		await sock.send(json.dumps(resp))
-		return
+		return False
 	if not data.ok or hasattr(data, 'error'):
 		resp['status'] = 500 if data.ok else data.status_code
 		resp['error'] = getattr(data, 'error', 'Unknown error')
-		await sock.send(json.dumps(resp))
-		return
+		return False
 	# Load data as a dict
 	dataJSON = data.json()['result']
 	if 'error' in dataJSON:
 		resp['status'] = 400
 		resp['error'] = dataJSON['error']
-		await sock.send(json.dumps(resp))
-		return
+		return False
 	resp['status'] = 200
 	resp['result'] = simplifyBadge(dataJSON)
-	recordBadge(resp['result'], sock.meal)
-	await sock.send(json.dumps(resp))
+	return True
 
 
 def simplifyBadge(data):
