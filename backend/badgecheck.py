@@ -352,11 +352,13 @@ def startup():
 	except NameError:
 		server = loop.run_until_complete(websockets.serve(
 			prcsConnection,
-			socket.gethostbyname(socket.getfqdn()),
-			getSetting('l_port')))
-		logger.info('Now listening for connections on {}:{}'.format(
-			*server.sockets[0].getsockname()
+			socket.gethostbyname_ex(socket.getfqdn())[-1] + ['127.0.0.1'],
+			getSetting('l_port')
 		))
+		for s in server.sockets:
+			logger.info('Now listening for connections on {}:{}'.format(
+				*s.getsockname()
+			))
 
 
 def sigint(signum, stack):
