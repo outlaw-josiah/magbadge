@@ -1,3 +1,6 @@
+from setuptools_scm import get_version
+
+
 class runtime:
 	url = "https://onsite.uber.magfest.org/uber/jsonrpc/"
 	l_port = 28424
@@ -35,7 +38,6 @@ class magapi:
 
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
-from setuptools_scm import get_version
 version_full = get_version(root='..')
 version = version_full.split('+')[0]
 version_meta = version_full.split('+')[1] if '+' in version_full else ''
@@ -43,7 +45,8 @@ logfile = "logs/server.log"
 generic_resp = dict(status=500, error='', result={})
 textwrap_conf = dict(
 	width=100, initial_indent=' ' * 11, subsequent_indent=' ' * 11)
-mealtimes=['breakfast', 'lunch', 'dinner', 'overnights', 'undefined']
+mealtimes = ['breakfast', 'lunch', 'dinner', 'overnights', 'undefined']
+
 
 class error:
 	JSON_invalid = 'Valid JSON was not supplied'
