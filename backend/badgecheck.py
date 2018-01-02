@@ -164,7 +164,8 @@ async def getBadge(sock, badge, resp):
 		resp['error'] = e.args
 		return False
 	if not data.ok or hasattr(data, 'error'):
-		resp['status'] = 500 if data.ok else data.status_code
+		if not data.ok:
+			resp['status'] = data.status_code
 		resp['error'] = getattr(data, 'error', 'Unknown error')
 		return False
 	# Load data as a dict
