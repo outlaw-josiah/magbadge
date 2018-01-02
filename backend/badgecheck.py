@@ -153,6 +153,11 @@ async def prcsConnection(sock, path):
 
 
 async def getBadge(sock, badge, resp):
+	'''Get badge data and confirm it's a loggable result
+
+	Sends the request to the MAGAPI and parses it for unexpected results
+	If anything goes wrong, return FALSE. If the response is good, return
+	TRUE'''
 	try: data = await getAttndFromMAGAPI(badge)
 	except ValueError as e:
 		resp['status'] = 400
