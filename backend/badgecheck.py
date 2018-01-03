@@ -174,6 +174,10 @@ async def getBadge(sock, badge, resp):
 		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = dataJSON['error']
 		return False
+	if 'error' in dataJSON['result']:
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
+		resp['error'] = dataJSON['result']['error']
+		return False
 	resp['status'] = requests.status_codes.codes.OK
 	resp['result'] = simplifyBadge(dataJSON['result'])
 	return True
