@@ -163,19 +163,19 @@ async def getBadge(sock, badge, resp):
 		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = e.args
 		return False
-	if not data.ok or hasattr(data, 'error'):
+	if not data.ok:
 		if not data.ok:
 			resp['status'] = data.status_code
-		resp['error'] = getattr(data, 'error', 'Unknown error')
+		resp['error'] = str(data) if data != str() else 'Unknown error'
 		return False
 	# Load data as a dict
-	dataJSON = data.json()['result']
+	dataJSON = data.json()
 	if 'error' in dataJSON:
 		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = dataJSON['error']
 		return False
 	resp['status'] = requests.status_codes.codes.OK
-	resp['result'] = simplifyBadge(dataJSON)
+	resp['result'] = simplifyBadge(dataJSON['result'])
 	return True
 
 
