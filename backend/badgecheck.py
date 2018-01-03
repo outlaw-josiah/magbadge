@@ -142,7 +142,7 @@ async def prcsConnection(sock, path):
 				valid = await getBadge(sock, msgJSON['params'], resp)
 				await sock.send(json.dumps(resp))
 				if valid:
-					recordBadge(resp['result'], filename, now)
+					util.recordBadge(resp['result'], filename, now)
 					util.improve(resp)
 				continue
 			# TODO: System state lookup
@@ -235,20 +235,6 @@ def simplifyBadge(data):
 	return result
 
 
-def recordBadge(data, filename, now):
-	'''Take simplified data and record it to CSV'''
-	logger.debug('Logging to {}'.format(filename))
-	line = (
-		"{0}|{badge_num}|{name}|{dept_head}|{staff}|{hr_worked}|{hr_total}|"
-		"{ribbons}\n".format(now, **data))
-	if not path.isfile(filename):
-		with open(filename, 'w') as file:
-			file.write(
-				"Time|Badge|Name|Dept Head|Staff|Worked hr|Total hr|Ribbons\n")
-	with open(filename, 'a') as file:
-		file.write(line)
-
-
 def getSetting(name):
 	'''Get setting from either debug or runtime scope. If getting setting from
 	debug scope, fall back to runtime scope if debug doesn't specify'''
@@ -282,56 +268,6 @@ def parseargs():
 	return parser.parse_args()
 
 
-def setLogLevel(firstRun=False):
-	'''Sets logging level based on the program verbosity state. Only cares
-	about the first StreamHandler or FileHandler attached to logger.
-	Logging levels:
-	0: Default. Only WARN+ are logged to console. File gets INFO+
-		Sub-modules get only CRITICAL
-	1: Console logs INFO+      4: Sub-modules log WARN+
-	2: File/Con logs DEBUG+    5: Sub-modules log INFO+
-	3: Sub-modules log ERROR+  6: Sub-modules log DEBUG+
-	'''
-	rootLogger = logging.getLogger()
-	ch = [h for h in rootLogger.handlers if type(h) is logging.StreamHandler][0]
-	fh = [h for h in rootLogger.handlers if type(h) is logging.FileHandler][0]
-	if not firstRun:
-		logger.warning("Changing log level")
-	# Set to default levels
-	ch.setLevel(logging.WARN)
-	fh.setLevel(logging.INFO)
-	logging.getLogger("requests").setLevel(logging.CRITICAL)
-	logging.getLogger("urllib3").setLevel(logging.CRITICAL)
-	logging.getLogger("websockets").setLevel(logging.CRITICAL)
-	if args.verbose == 1:
-		ch.setLevel(logging.INFO)
-	if args.verbose >= 2:
-		ch.setLevel(logging.DEBUG)
-		fh.setLevel(logging.DEBUG)
-	# Only bother if the level for these would be changed
-	if args.verbose >= 3:
-		if args.verbose == 3:
-			level = logging.ERROR
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose == 4:
-			level = logging.WARN
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose == 5:
-			level = logging.INFO
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose >= 6:
-			level = logging.DEBUG
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-
-
 def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
@@ -355,7 +291,7 @@ def startup():
 		rootLogger.addHandler(ch)
 		fh.setFormatter(logging.Formatter(filFmt, "%b-%d %H:%M:%S"))
 		rootLogger.addHandler(fh)
-		setLogLevel(True)
+		util.setLogLevel(args.verbose, True)
 		logger.debug('Logging set up.')
 	logger.debug('Args state: {}'.format(args))
 	logger.info('Badge check midlayer v{} starting on {} ({})'.format(
