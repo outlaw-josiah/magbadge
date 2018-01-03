@@ -2,7 +2,7 @@ from setuptools_scm import get_version
 
 
 class runtime:
-	url = "https://onsite.uber.magfest.org/uber/jsonrpc/"
+	url = "https://super2018.uber.magfest.org/uber/jsonrpc/"
 	l_port = 28424
 	logfile_pre = ""
 	logfile_suf = ".csv"
@@ -11,7 +11,7 @@ class runtime:
 
 class debug:
 	"""Settings that should be used during debugging."""
-	url = runtime.url.replace("onsite", "staging4")
+	url = runtime.url.replace("super2018", "staging4")
 	logfile_pre = "DEBUG_"
 	timeout = 4
 
