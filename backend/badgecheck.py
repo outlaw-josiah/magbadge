@@ -1,6 +1,6 @@
 #!/bin/env python3
 import settings, logging, argparse, requests, asyncio, websockets, json, signal
-import textwrap, socket
+import textwrap, socket, util
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -143,6 +143,7 @@ async def prcsConnection(sock, path):
 				await sock.send(json.dumps(resp))
 				if valid:
 					recordBadge(resp['result'], filename, now)
+					util.improve(resp)
 				continue
 			# TODO: System state lookup
 			elif msgJSON['action'] == 'query.state':
