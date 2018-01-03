@@ -4,7 +4,7 @@ from logging	import getLogger
 
 
 restr_standard_lbls = ['No gluten', 'No nuts', 'No pork', 'Vegetarian/Vegan', ]
-restr_sandwiches = ['Peanut Butter', ]
+restr_sandwiches = ['None', 'Peanut Butter', ]
 logger = getLogger(__name__)
 
 
