@@ -82,6 +82,7 @@ async def prcsConnection(sock, path):
 	now = datetime.now()
 	filename = "logs/{}{}_scans.csv".format(
 		getSetting('logfile_pre'), now.date())
+	meal = 'undefined'
 	try:
 		while sock.open:
 			msg = await sock.recv()
@@ -113,7 +114,9 @@ async def prcsConnection(sock, path):
 				continue
 
 			# Done error checking, begin actual code
-			if 'meal' in msgJSON and msgJSON['meal'] in settings.mealtimes:
+			if 'meal' in msgJSON and
+			msgJSON['meal'] in settings.mealtimes and
+			msgJSON['meal'] != meal:
 				logger.info('Updating mealtime')
 				meal = msgJSON['meal']
 				now = datetime.now()
