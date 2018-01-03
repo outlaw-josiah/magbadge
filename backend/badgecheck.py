@@ -114,9 +114,9 @@ async def prcsConnection(sock, path):
 				continue
 
 			# Done error checking, begin actual code
-			if 'meal' in msgJSON and
-			msgJSON['meal'] in settings.mealtimes and
-			msgJSON['meal'] != meal:
+			if ('meal' in msgJSON
+			and msgJSON['meal'] in settings.mealtimes
+			and msgJSON['meal'] != meal):
 				logger.info('Updating mealtime')
 				meal = msgJSON['meal']
 				now = datetime.now()
