@@ -301,7 +301,7 @@ def startup():
 
 	# Set up API key
 	try:
-		with open('apikey.txt') as f:
+		with open(getSetting('apikey')) as f:
 			settings.magapi.headers['X-Auth-Token'] = str(UUID(f.read().strip()))
 	except FileNotFoundError:
 		logger.fatal('Could not find API key file, refusing to run.')
