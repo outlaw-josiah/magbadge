@@ -79,7 +79,9 @@ async def prcsConnection(sock, path):
 	'''Process incoming connections'''
 	logger.debug(
 		'Client connection opened at {}:{}'.format(*sock.remote_address))
-	sock.meal = 'undefined'
+	now = datetime.now()
+	filename = "logs/{}{}_scans.csv".format(
+		getSetting('logfile_pre'), now.date())
 	try:
 		while sock.open:
 			msg = await sock.recv()
@@ -112,7 +114,14 @@ async def prcsConnection(sock, path):
 
 			# Done error checking, begin actual code
 			if 'meal' in msgJSON and msgJSON['meal'] in settings.mealtimes:
-				sock.meal = msgJSON['meal']
+				logger.info('Updating mealtime')
+				meal = msgJSON['meal']
+				now = datetime.now()
+				filename = "logs/{}{}{}_scans.csv".format(
+					getSetting('logfile_pre'),
+					now.date(),
+					("_" + meal) if meal != 'undefined' else ''
+				)
 			if 'action' not in msgJSON:
 				logger.error('JSON did not include action: {}'.format(msg))
 				resp['status'] = requests.status_codes.codes.BAD_REQUEST
@@ -124,10 +133,11 @@ async def prcsConnection(sock, path):
 				pass
 			# Badge lookup
 			elif msgJSON['action'] == 'query.badge':
+				now = datetime.now()
 				valid = await getBadge(sock, msgJSON['params'], resp)
 				await sock.send(json.dumps(resp))
 				if valid:
-					recordBadge(resp['result'], sock.meal)
+					recordBadge(resp['result'], filename, now)
 				continue
 			# TODO: System state lookup
 			elif msgJSON['action'] == 'query.state':
@@ -216,14 +226,9 @@ def simplifyBadge(data):
 	return result
 
 
-def recordBadge(data, meal):
+def recordBadge(data, filename, now):
 	'''Take simplified data and record it to CSV'''
-	now = datetime.now()
-	filename = "logs/{}{}{}_scans.csv".format(
-		getSetting('logfile_pre'),
-		now.date(),
-		("_" + meal) if meal != 'undefined' else ''
-	)
+	logger.debug('Logging to {}'.format(filename))
 	line = (
 		"{0}|{badge_num}|{name}|{dept_head}|{staff}|{hr_worked}|{hr_total}|"
 		"{ribbons}\n".format(now, **data))
