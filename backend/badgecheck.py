@@ -114,9 +114,11 @@ async def prcsConnection(sock, path):
 				continue
 
 			# Done error checking, begin actual code
-			if ('meal' in msgJSON
-			and msgJSON['meal'] in settings.mealtimes
-			and msgJSON['meal'] != meal):
+			if (
+				'meal' in msgJSON
+				and msgJSON['meal'] in settings.mealtimes
+				and msgJSON['meal'] != meal
+			):
 				logger.info('Updating mealtime')
 				meal = msgJSON['meal']
 				now = datetime.now()
@@ -203,10 +205,11 @@ def simplifyBadge(data):
 		hr_worked=data['worked_hours'], hr_total=data['weighted_hours'],
 		ribbons=data['ribbon_labels'], dept_head=data['is_dept_head'],
 		badge_t=data['badge_type_label'],
-		name=
+		name=(
 			data['badge_printed_name']
 			if (data['badge_printed_name'] != "")
-			else data['full_name'],
+			else data['full_name']
+		),
 	)
 	if data['food_restrictions'] is not None:
 		food = data['food_restrictions']
