@@ -24,13 +24,15 @@ async def hello():
 		greeting = await websocket.recv()
 		print("< {}".format(greeting))
 
-async def getmany(start=0, stop=1, meal="undefined"):
+async def getmany(start=0, stop=1, meal="undefined", ratelimit=True):
 	async with websockets.connect('ws://localhost:28424') as websocket:
 		for x in range(start, stop):
 			await websocket.send(
 				'{{"action":"query.badge","params":{},'
 				'"meal":"{}"}}'.format(x, meal))
 			await websocket.recv()
+			if ratelimit:
+				await asyncio.sleep(0.1)
 
 def run(func, *args, **kwargs):
 	asyncio.get_event_loop().run_until_complete(func(*args, **kwargs))
