@@ -27,6 +27,8 @@ async def hello():
 async def getmany(start=0, stop=1, meal="undefined", ratelimit=True):
 	async with websockets.connect('ws://localhost:28424') as websocket:
 		for x in range(start, stop):
+			if not ((x - start) % 100):
+				print(x)
 			await websocket.send(
 				'{{"action":"query.badge","params":{},'
 				'"meal":"{}"}}'.format(x, meal))
