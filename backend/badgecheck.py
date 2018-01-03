@@ -279,15 +279,15 @@ def startup():
 
 	# Set up logging
 	open(settings.logfile, 'w').close()
-	conFmt = "[%(levelname)8s] %(name)s: %(message)s"
-	filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
 	logger = logging.getLogger(__name__)
 	rootLogger = logging.getLogger()
 	if len(rootLogger.handlers) is 0:
 		rootLogger.setLevel(logging.DEBUG)
+		conFmt = "[%(levelname)8s] %(name)s: %(message)s"
 		ch = logging.StreamHandler()
 		ch.setFormatter(logging.Formatter(conFmt))
 		rootLogger.addHandler(ch)
+		filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
 		fh = logging.FileHandler(settings.logfile)
 		fh.setFormatter(logging.Formatter(filFmt, "%b-%d %H:%M:%S"))
 		rootLogger.addHandler(fh)
