@@ -38,10 +38,17 @@ async def getAttndFromMAGAPI(badge):
 	)
 
 	logger.info('Looking up badge {}'.format(badge))
-	logger.debug(req)
+	logger.debug(kwargs)
 	try:
 		futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
 		resp = await futr_resp
+		prepped = resp.request
+		logger.debug('{}\n{}\n{}\n\n{}'.format(
+			'-----------START-----------',
+			prepped.method + ' ' + prepped.url,
+			'\n'.join('{}: {}'.format(k, v) for k, v in prepped.headers.items()),
+			prepped.body,
+		))
 	except ConnectTimeout:
 		resp = requests.Response()
 		resp.status_code = 598
