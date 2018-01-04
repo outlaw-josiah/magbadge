@@ -62,7 +62,17 @@ socket.onclose = function(event) {
 
 
 function sendBadge() {
+	var meal_selection = document.getElementsByName('meal')
+	var meal_choice = ''
+	for (var i = 0; i < meal_selection.length; i++) {
+		if (meal_selection[i].checked) {
+			meal_choice = meal_selection[i].value
+			break
+		}
+	}
+	console.log(meal_choice)
 	data = {action	: "query.badge",
+			meal	: meal_choice,
 			params	: isNaN(input.value) ? input.value : parseInt(input.value)}
 	status_box.innerHTML = "Checking badge..."
 	socket.send(JSON.stringify(data))
