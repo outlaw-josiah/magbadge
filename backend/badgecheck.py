@@ -1,6 +1,7 @@
 #!/bin/env python3
 import settings, logging, argparse, requests, asyncio, websockets, json, signal
 import textwrap, socket, util
+import sys
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -273,7 +274,7 @@ def parseargs():
 def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
-	_chdir(path.dirname(path.abspath(__file__)))
+	_chdir(sys.path[0])
 	_makedirs("logs", exist_ok=True)
 	global args, logger, loop
 	args = parseargs()
