@@ -38,8 +38,13 @@ socket.onmessage = function(response) {
 		d_sandwich.textContent = data.sandwich
 
 		r_freeform.textContent = data.restrict[0]
-		r_vegan.textContent =
-			(data.restrict[1].indexOf('Vegetarian/Vegan') == -1) ? "No" : "Yes"
+		if (data.restrict[1].indexOf('Vegetarian/Vegan') == -1) {
+			r_vegan.textContent = "No"
+			r_vegan.parentElement.style.backgroundColor = "green"
+		} else {
+			r_vegan.textContent = "Yes"
+			r_vegan.parentElement.style.backgroundColor = "red"
+		}
 		r_pork.textContent =
 			(data.restrict[1].indexOf('No pork') == -1) ? "No" : "Yes"
 		r_gluten.textContent =
