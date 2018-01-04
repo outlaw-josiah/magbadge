@@ -45,12 +45,27 @@ socket.onmessage = function(response) {
 			r_vegan.textContent = "Yes"
 			r_vegan.parentElement.style.backgroundColor = "red"
 		}
-		r_pork.textContent =
-			(data.restrict[1].indexOf('No pork') == -1) ? "No" : "Yes"
-		r_gluten.textContent =
-			(data.restrict[1].indexOf('No gluten') == -1) ? "No" : "Yes"
-		r_nuts.textContent =
-			(data.restrict[1].indexOf('No nuts') == -1) ? "No" : "Yes"
+		if (data.restrict[1].indexOf('No Pork') == -1) {
+			r_pork.textContent = "No"
+			r_pork.parentElement.style.backgroundColor = "green"
+		} else {
+			r_pork.textContent = "Yes"
+			r_pork.parentElement.style.backgroundColor = "red"
+		}
+		if (data.restrict[1].indexOf('No Gluten') == -1) {
+			r_gluten.textContent = "No"
+			r_gluten.parentElement.style.backgroundColor = "green"
+		} else {
+			r_gluten.textContent = "Yes"
+			r_gluten.parentElement.style.backgroundColor = "red"
+		}
+		if (data.restrict[1].indexOf('No Nuts') == -1) {
+			r_nuts.textContent = "No"
+			r_nuts.parentElement.style.backgroundColor = "green"
+		} else {
+			r_nuts.textContent = "Yes"
+			r_nuts.parentElement.style.backgroundColor = "red"
+		}
 
 		status_box.innerHTML = "Done"
 	} else {
