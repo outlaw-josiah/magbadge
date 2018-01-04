@@ -1,0 +1,76 @@
+html, body {
+	height: 98%;
+	margin: 0.25em; padding: 0px;
+	background-color: #333;
+	--font-height: 4vh;
+}
+#main-wrapper {
+	height: 100%;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+
+p.lead {
+	text-align: center;
+	color: white;
+	font-size: var(--font-height);
+	margin: 0.25em;
+}
+
+
+div.form-group{
+	width: 100%;
+	font-size: var(--font-height);
+	margin: 0.25em;
+}
+input, button {
+	border-radius: 0.5em;
+	font-size: var(--font-height);
+}
+input#badgeID {
+	width: 75%;
+	text-align: center;
+	padding-right: 0.5em;
+	padding-left: 0.5em;
+	height: 1.5em;
+}
+button {
+	height: 1.75em;
+}
+
+
+div#results {
+	border: 1px solid;
+	-webkit-box-flex: 1;
+}
+#results * {
+	margin: 0px;
+	font-family: Consolas;
+	--r-height: 10vh;
+	overflow-y: hidden;
+}
+.resultline {
+	background-color: green;
+	border: 1px solid;
+	height: var(--r-height);
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+}
+.resultline.double{	height: calc(var(--r-height) * 2) }
+
+.resultline div {
+	-webkit-box-flex: 1;
+	padding: 0% 1% 0%;
+	overflow-x: hidden;
+}
+
+.resultline div + div { border-left: 1px dotted; }
+
+#NAME, #BTEXT, #RIBBONS, #SANDWICH { -webkit-box-flex: 2;}
+#BNUM, #HOURS { width: 20%; -webkit-box-flex: 0; }
+
+.resultline div span {
+	font-size: 5vh;
+}
+
+#ERROR { background-color: green; height: 100% }
