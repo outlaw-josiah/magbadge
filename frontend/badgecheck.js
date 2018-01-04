@@ -27,6 +27,7 @@ socket.onmessage = function(response) {
 	data = JSON.parse(response.data)
 	if (data.status == 200){
 		data = data.result
+		// Simple data display
 		d_bnum.textContent	= data.badge_num
 		d_name.textContent	= data.name
 		d_btext.textContent	= data.btext
@@ -37,6 +38,7 @@ socket.onmessage = function(response) {
 		d_name.textContent = data.name
 		d_sandwich.textContent = data.sandwich
 
+		// Restrictions display
 		r_freeform.textContent = data.restrict[0]
 		if (data.restrict[1].indexOf('Vegetarian/Vegan') == -1) {
 			r_vegan.textContent = "No"
@@ -67,6 +69,7 @@ socket.onmessage = function(response) {
 			r_nuts.parentElement.style.backgroundColor = "red"
 		}
 
+		// Done all displaying
 		status_box.innerHTML = "Done"
 	} else {
 		status_box.innerHTML = "HTTP " + data.status +"<br />"+ data.error
