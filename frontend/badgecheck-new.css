@@ -73,7 +73,7 @@ div#results {
 #BNUM, #HOURS { width: 20%; -webkit-box-flex: 0; }
 
 .resultline div span {
-	font-size: 5vh;
+	font-size: 4vh;
 }
 
 #ERROR { background-color: green; height: 100% }
