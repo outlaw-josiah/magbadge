@@ -1,4 +1,5 @@
 __pycache__/
+/logs
 backend/logs/
 
 backend/tests/heather.json
