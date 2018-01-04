@@ -1,6 +1,6 @@
 #!/bin/env python3
 import settings, logging, argparse, requests, asyncio, websockets, json, signal
-import textwrap
+import textwrap, socket, util
 from copy		import deepcopy
 from datetime	import datetime
 from functools	import partial
@@ -12,7 +12,7 @@ from requests.exceptions import ConnectTimeout, ConnectionError
 from websockets.exceptions import ConnectionClosed
 
 
-async def getAttndFromBadge(badge):
+async def getAttndFromMAGAPI(badge):
 	'''Takes a string that can be scanned barcode or a positive number,
 	otherwise raises a ValueError, then queries the MAGAPI for the
 	associated attendee'''
@@ -38,10 +38,17 @@ async def getAttndFromBadge(badge):
 	)
 
 	logger.info('Looking up badge {}'.format(badge))
-	logger.debug(req)
+	logger.debug(kwargs)
 	try:
 		futr_resp = loop.run_in_executor(None, partial(requests.post, **kwargs))
 		resp = await futr_resp
+		prepped = resp.request
+		logger.debug('{}\n{}\n{}\n\n{}'.format(
+			'-----------START-----------',
+			prepped.method + ' ' + prepped.url,
+			'\n'.join('{}: {}'.format(k, v) for k, v in prepped.headers.items()),
+			prepped.body,
+		))
 	except ConnectTimeout:
 		resp = requests.Response()
 		resp.status_code = 598
@@ -79,10 +86,16 @@ async def prcsConnection(sock, path):
 	'''Process incoming connections'''
 	logger.debug(
 		'Client connection opened at {}:{}'.format(*sock.remote_address))
+	now = datetime.now()
+	filename = "logs/{}{}_scans.csv".format(
+		getSetting('logfile_pre'), now.date())
+	meal = 'undefined'
 	try:
 		while sock.open:
 			msg = await sock.recv()
 			resp = deepcopy(settings.generic_resp)
+
+			# Load JSON and error check it
 			try: msgJSON = json.loads(msg)
 			except JSONDecodeError as e:
 				logger.error(
@@ -91,7 +104,7 @@ async def prcsConnection(sock, path):
 						textwrap.fill(msg, **settings.textwrap_conf),
 						textwrap.fill(e.args[0], **settings.textwrap_conf)
 					))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				sock.close()
@@ -102,23 +115,47 @@ async def prcsConnection(sock, path):
 					'{}'.format(
 						textwrap.fill(msg, **settings.textwrap_conf)
 					))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_invalid
 				await sock.send(json.dumps(resp))
 				continue
-			elif 'action' not in msgJSON:
+
+			# Done error checking, begin actual code
+			if (
+				'meal' in msgJSON
+				and msgJSON['meal'] in settings.mealtimes
+				and msgJSON['meal'] != meal
+			):
+				logger.info('Updating mealtime')
+				meal = msgJSON['meal']
+				now = datetime.now()
+				filename = "logs/{}{}{}_scans.csv".format(
+					getSetting('logfile_pre'),
+					now.date(),
+					("_" + meal) if meal != 'undefined' else ''
+				)
+			if 'action' not in msgJSON:
 				logger.error('JSON did not include action: {}'.format(msg))
-				resp['status'] = 400
+				resp['status'] = requests.status_codes.codes.BAD_REQUEST
 				resp['error'] = settings.error.JSON_NOOP
 				await sock.send(json.dumps(resp))
 				continue
+			# TODO: System admin level change
 			elif msgJSON['action'] == 'admin':
 				pass
+			# Badge lookup
 			elif msgJSON['action'] == 'query.badge':
-				await getBadge(sock, msgJSON['params'], resp)
+				now = datetime.now()
+				valid = await getBadge(sock, msgJSON['params'], resp)
+				await sock.send(json.dumps(resp))
+				if valid:
+					util.recordBadge(resp['result'], filename, now)
+					util.improve(resp)
 				continue
+			# TODO: System state lookup
 			elif msgJSON['action'] == 'query.state':
 				pass
+			# Wrap the request into a response and send back
 			elif msgJSON['action'] == 'echo':
 				logger.warning(
 					'Echo request for data on connection {1}:{2}\n'
@@ -126,39 +163,46 @@ async def prcsConnection(sock, path):
 						textwrap.fill(msg, **settings.textwrap_conf),
 						*sock.remote_address
 					))
-				resp['status'] = 200
+				resp['status'] = requests.status_codes.codes.OK
 				resp['result'] = msgJSON
 				await sock.send(json.dumps(resp))
+			# Not a valid action, send a response to the client and continue
 			else:
 				await sock.send("")
 	except ConnectionClosed:
+		# Healthy error, log in debug mode but otherwise ignore
 		logger.debug(
 			'Connection {}:{} closed by client'.format(*sock.remote_address))
 
 
 async def getBadge(sock, badge, resp):
-	try: data = await getAttndFromBadge(badge)
+	'''Get badge data and confirm it's a loggable result
+
+	Sends the request to the MAGAPI and parses it for unexpected results
+	If anything goes wrong, return FALSE. If the response is good, return
+	TRUE'''
+	try: data = await getAttndFromMAGAPI(badge)
 	except ValueError as e:
-		resp['status'] = 400
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = e.args
-		await sock.send(json.dumps(resp))
-		return
-	if not data.ok or hasattr(data, 'error'):
-		resp['status'] = 500 if data.ok else data.status_code
-		resp['error'] = getattr(data, 'error', 'Unknown error')
-		await sock.send(json.dumps(resp))
-		return
+		return False
+	if not data.ok:
+		resp['status'] = data.status_code
+		resp['error'] = str(data.text) if data.text != str() else 'Unknown error'
+		return False
 	# Load data as a dict
-	dataJSON = data.json()['result']
+	dataJSON = data.json()
 	if 'error' in dataJSON:
-		resp['status'] = 400
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
 		resp['error'] = dataJSON['error']
-		await sock.send(json.dumps(resp))
-		return
-	resp['status'] = 200
-	resp['result'] = simplifyBadge(dataJSON)
-	recordBadge(resp['result'])
-	await sock.send(json.dumps(resp))
+		return False
+	if 'error' in dataJSON['result']:
+		resp['status'] = requests.status_codes.codes.BAD_REQUEST
+		resp['error'] = dataJSON['result']['error']
+		return False
+	resp['status'] = requests.status_codes.codes.OK
+	resp['result'] = simplifyBadge(dataJSON['result'])
+	return True
 
 
 def simplifyBadge(data):
@@ -168,10 +212,7 @@ def simplifyBadge(data):
 		hr_worked=data['worked_hours'], hr_total=data['weighted_hours'],
 		ribbons=data['ribbon_labels'], dept_head=data['is_dept_head'],
 		badge_t=data['badge_type_label'],
-		name=
-			data['badge_printed_name']
-			if (data['badge_printed_name'] != "")
-			else data['full_name'],
+		btext=data['badge_printed_name'], name=data['full_name']
 	)
 	if data['food_restrictions'] is not None:
 		food = data['food_restrictions']
@@ -181,34 +222,19 @@ def simplifyBadge(data):
 				food['sandwich_pref_labels']
 			))
 		result['sandwich'] = (
-			[] if len(food['sandwich_pref_labels']) == 0
-			else food['sandwich_pref_labels'][0])
+			food['sandwich_pref_labels']
+			if food['sandwich_pref_labels'] != str() else
+			['None']
+		)
 		result['restrict'] = [
 			food['freeform'] if food['freeform'] != str() else 'None',
 			food['standard_labels']
 			]
 	else:
-		result['sandwich'] = 'None'
+		result['sandwich'] = ['None']
 		result['restrict'] = ['None', []]
 
 	return result
-
-
-def recordBadge(data):
-	'''Take simplified data and record it to CSV'''
-	now = datetime.now()
-	filename = "logs/{}{}_scans.csv".format(
-		getSetting('logfile_pre'),
-		now.date())
-	line = (
-		"{0}|{badge_num}|{name}|{dept_head}|{staff}|{hr_worked}|{hr_total}|"
-		"{ribbons}\n".format(now, **data))
-	if not path.isfile(filename):
-		with open(filename, 'w') as file:
-			file.write(
-				"Time|Badge|Name|Dept Head|Staff|Worked hr|Total hr|Ribbons\n")
-	with open(filename, 'a') as file:
-		file.write(line)
 
 
 def getSetting(name):
@@ -244,56 +270,6 @@ def parseargs():
 	return parser.parse_args()
 
 
-def setLogLevel(firstRun=False):
-	'''Sets logging level based on the program verbosity state. Only cares
-	about the first StreamHandler or FileHandler attached to logger.
-	Logging levels:
-	0: Default. Only WARN+ are logged to console. File gets INFO+
-		Sub-modules get only CRITICAL
-	1: Console logs INFO+      4: Sub-modules log WARN+
-	2: File/Con logs DEBUG+    5: Sub-modules log INFO+
-	3: Sub-modules log ERROR+  6: Sub-modules log DEBUG+
-	'''
-	rootLogger = logging.getLogger()
-	ch = [h for h in rootLogger.handlers if type(h) is logging.StreamHandler][0]
-	fh = [h for h in rootLogger.handlers if type(h) is logging.FileHandler][0]
-	if not firstRun:
-		logger.warning("Changing log level")
-	# Set to default levels
-	ch.setLevel(logging.WARN)
-	fh.setLevel(logging.INFO)
-	logging.getLogger("requests").setLevel(logging.CRITICAL)
-	logging.getLogger("urllib3").setLevel(logging.CRITICAL)
-	logging.getLogger("websockets").setLevel(logging.CRITICAL)
-	if args.verbose == 1:
-		ch.setLevel(logging.INFO)
-	if args.verbose >= 2:
-		ch.setLevel(logging.DEBUG)
-		fh.setLevel(logging.DEBUG)
-	# Only bother if the level for these would be changed
-	if args.verbose >= 3:
-		if args.verbose == 3:
-			level = logging.ERROR
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose == 4:
-			level = logging.WARN
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose == 5:
-			level = logging.INFO
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-		elif args.verbose >= 6:
-			level = logging.DEBUG
-			logging.getLogger("requests").setLevel(level)
-			logging.getLogger("urllib3").setLevel(level)
-			logging.getLogger("websockets").setLevel(level)
-
-
 def startup():
 	'''Do basic setup for the program. This really should only be run once
 	but has some basic tests to prevent double-assignment'''
@@ -305,19 +281,19 @@ def startup():
 
 	# Set up logging
 	open(settings.logfile, 'w').close()
-	conFmt = "[%(levelname)8s] %(name)s: %(message)s"
-	filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
 	logger = logging.getLogger(__name__)
 	rootLogger = logging.getLogger()
 	if len(rootLogger.handlers) is 0:
 		rootLogger.setLevel(logging.DEBUG)
+		conFmt = "[%(levelname)8s] %(name)s: %(message)s"
 		ch = logging.StreamHandler()
 		ch.setFormatter(logging.Formatter(conFmt))
-		fh = logging.FileHandler(settings.logfile)
 		rootLogger.addHandler(ch)
+		filFmt = "[%(levelname)8s] %(asctime)s %(name)s: %(message)s"
+		fh = logging.FileHandler(settings.logfile)
 		fh.setFormatter(logging.Formatter(filFmt, "%b-%d %H:%M:%S"))
 		rootLogger.addHandler(fh)
-		setLogLevel(True)
+		util.setLogLevel(args.verbose, True)
 		logger.debug('Logging set up.')
 	logger.debug('Args state: {}'.format(args))
 	logger.info('Badge check midlayer v{} starting on {} ({})'.format(
@@ -327,7 +303,7 @@ def startup():
 
 	# Set up API key
 	try:
-		with open('apikey.txt') as f:
+		with open(getSetting('apikey')) as f:
 			settings.magapi.headers['X-Auth-Token'] = str(UUID(f.read().strip()))
 	except FileNotFoundError:
 		logger.fatal('Could not find API key file, refusing to run.')
@@ -342,11 +318,13 @@ def startup():
 	except NameError:
 		server = loop.run_until_complete(websockets.serve(
 			prcsConnection,
-			'localhost',
-			getSetting('l_port')))
-		logger.info('Now listening for connections on {}:{}'.format(
-			'localhost',
-			getSetting('l_port')))
+			socket.gethostbyname_ex(socket.getfqdn())[-1] + ['127.0.0.1'],
+			getSetting('l_port')
+		))
+		for s in server.sockets:
+			logger.info('Now listening for connections on {}:{}'.format(
+				*s.getsockname()
+			))
 
 
 def sigint(signum, stack):

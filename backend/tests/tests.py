@@ -81,7 +81,7 @@ class requestchecks(unittest.TestCase):
 			self.subTest("Badge {}".format(b)), \
 			open('tests/sampledata/b{}.json'.format(b)) as f:
 				apidata = self.loop.run_until_complete(
-					bdgchk.getAttndFromBadge(b)).text
+					bdgchk.getAttndFromMAGAPI(b)).text
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
 
@@ -92,34 +92,34 @@ class requestchecks(unittest.TestCase):
 			self.subTest("Badge {}".format(self.barcodes[b - 20])),\
 			open('tests/sampledata/b{}.json'.format(b)) as f:
 				apidata = self.loop.run_until_complete(
-					bdgchk.getAttndFromBadge(self.barcodes[b - 20])).text
+					bdgchk.getAttndFromMAGAPI(self.barcodes[b - 20])).text
 				sampledata = f.read()
 				self.assertEqual(loads(apidata), loads(sampledata))
 
 	def test_badString(self):
 		with self.assertRaises(ValueError) as context:
-			self.loop.run_until_complete(bdgchk.getAttndFromBadge("AAA"))
+			self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI("AAA"))
 		self.assertIn(
 			'Not a valid badge string',
 			context.exception.args)
 
 	def test_emptyString(self):
 		with self.assertRaises(ValueError) as context:
-			self.loop.run_until_complete(bdgchk.getAttndFromBadge(""))
+			self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI(""))
 		self.assertIn(
 			'Not a valid badge string',
 			context.exception.args)
 
 	def test_badInt(self):
 		with self.assertRaises(ValueError) as context:
-			self.loop.run_until_complete(bdgchk.getAttndFromBadge(-1))
+			self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI(-1))
 		self.assertIn(
 			'(-1) is less than 0',
 			context.exception.args)
 
 	def test_badData(self):
 		with self.assertRaises(ValueError) as context:
-			self.loop.run_until_complete(bdgchk.getAttndFromBadge({}))
+			self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI({}))
 		self.assertIn(
 			'Data was not an integer or a string',
 			context.exception.args)
@@ -133,7 +133,7 @@ class requestchecks(unittest.TestCase):
 		expected.status_code = 598
 		expected.error = 'Connection timed out after {}ms'.format(
 			bdgchk.getSetting('timeout') * 1000)
-		actual = self.loop.run_until_complete(bdgchk.getAttndFromBadge(1))
+		actual = self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI(1))
 
 		self.assertEqual(expected.error, actual.error)
 		self.assertEqual(expected.status_code, actual.status_code)
@@ -150,7 +150,7 @@ class requestchecks(unittest.TestCase):
 		expected = bdgchk.requests.Response()
 		expected.status_code = 504
 		expected.error = ''
-		actual = self.loop.run_until_complete(bdgchk.getAttndFromBadge(1))
+		actual = self.loop.run_until_complete(bdgchk.getAttndFromMAGAPI(1))
 
 		self.assertEqual(expected.error, actual.error)
 		self.assertEqual(expected.status_code, actual.status_code)
