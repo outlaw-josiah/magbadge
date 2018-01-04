@@ -306,7 +306,9 @@ def startup():
 		with open(getSetting('apikey')) as f:
 			settings.magapi.headers['X-Auth-Token'] = str(UUID(f.read().strip()))
 	except FileNotFoundError:
-		logger.fatal('Could not find API key file, refusing to run.')
+		logger.fatal('Could not find API key file, refusing to run. ({})'.format(
+			path.abspath(getSetting('apikey'))
+		))
 		raise SystemExit
 	except ValueError:
 		logger.fatal('API key not a valid UUID, refusing to run.')
