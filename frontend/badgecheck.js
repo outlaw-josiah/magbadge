@@ -70,7 +70,11 @@ socket.onmessage = function(response) {
 		}
 
 		// Done all displaying
-		status_box.innerHTML = "Done"
+		if (data.message && data.message != "") {
+			status_box.innerHTML = data.message
+		} else {
+			status_box.innerHTML = "Done"
+		}
 	} else {
 		status_box.innerHTML = "HTTP " + data.status +"<br />"+ data.error
 	}
