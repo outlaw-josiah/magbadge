@@ -22,7 +22,7 @@ function tBox_keydown(element, event) {
 }
 
 
-var socket = new WebSocket("ws://localhost:28000/")
+var socket = new WebSocket("ws://staging.home.kaeva.info:28424/")
 socket.onmessage = function(response) {
 	data = JSON.parse(response.data)
 	if (data.status == 200){
