@@ -1,0 +1,8 @@
+__pycache__/
+/logs
+backend/logs/
+
+backend/tests/heather.json
+backend/tests/mochi.json
+apikey.txt*
+snip.py

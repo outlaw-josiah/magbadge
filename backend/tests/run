@@ -1,0 +1,3 @@
+#!/bin/zsh
+cd $(dirname ${(%):-%x})/..
+python -W ignore::DeprecationWarning tests/tests.py

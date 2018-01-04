@@ -7,9 +7,13 @@ url = "https://pypi.python.org/simple"
 
 [dev-packages]
 
+testfixtures = "*"
+pycodestyle = "*"
 
 
 [packages]
 
 requests = "*"
 websockets = "*"
+testfixtures = "*"
+setuptools-scm = "*"
