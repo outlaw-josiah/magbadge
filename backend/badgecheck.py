@@ -148,6 +148,8 @@ async def prcsConnection(sock, path):
 			elif msgJSON['action'] == 'query.badge':
 				now = datetime.now()
 				valid = await getBadge(sock, msgJSON['params'], resp)
+				if args.debug:
+					resp['result']['message'] = "!!Server is in debug mode!!"
 				await sock.send(json.dumps(resp))
 				if valid:
 					util.recordBadge(resp['result'], filename, now)
