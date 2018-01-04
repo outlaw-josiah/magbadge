@@ -35,6 +35,8 @@ socket.onmessage = function(response) {
 		d_btype.textContent = data.badge_t
 		d_ribbons.textContent = data.ribbons
 		d_name.textContent = data.name
+		d_sandwich.textContent = data.sandwich
+
 		r_freeform.textContent = data.restrict[0]
 		status_box.innerHTML = "Done"
 	} else {
