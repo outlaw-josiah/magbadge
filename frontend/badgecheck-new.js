@@ -46,6 +46,7 @@ socket.onmessage = function(response) {
 			(data.restrict[1].indexOf('No gluten') == -1) ? "No" : "Yes"
 		r_nuts.textContent =
 			(data.restrict[1].indexOf('No nuts') == -1) ? "No" : "Yes"
+
 		status_box.innerHTML = "Done"
 	} else {
 		status_box.innerHTML = data.error
