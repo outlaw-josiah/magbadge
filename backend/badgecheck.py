@@ -188,7 +188,7 @@ async def getBadge(sock, badge, resp):
 		return False
 	if not data.ok:
 		resp['status'] = data.status_code
-		resp['error'] = str(data) if data != str() else 'Unknown error'
+		resp['error'] = str(data.text) if data.text != str() else 'Unknown error'
 		return False
 	# Load data as a dict
 	dataJSON = data.json()
