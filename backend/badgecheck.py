@@ -180,8 +180,7 @@ async def getBadge(sock, badge, resp):
 		resp['error'] = e.args
 		return False
 	if not data.ok:
-		if not data.ok:
-			resp['status'] = data.status_code
+		resp['status'] = data.status_code
 		resp['error'] = str(data) if data != str() else 'Unknown error'
 		return False
 	# Load data as a dict
