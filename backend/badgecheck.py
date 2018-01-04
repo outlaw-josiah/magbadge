@@ -205,11 +205,7 @@ def simplifyBadge(data):
 		hr_worked=data['worked_hours'], hr_total=data['weighted_hours'],
 		ribbons=data['ribbon_labels'], dept_head=data['is_dept_head'],
 		badge_t=data['badge_type_label'],
-		name=(
-			data['badge_printed_name']
-			if (data['badge_printed_name'] != "")
-			else data['full_name']
-		),
+		btext=data['badge_printed_name'], name=data['full_name']
 	)
 	if data['food_restrictions'] is not None:
 		food = data['food_restrictions']
