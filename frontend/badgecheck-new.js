@@ -38,6 +38,14 @@ socket.onmessage = function(response) {
 		d_sandwich.textContent = data.sandwich
 
 		r_freeform.textContent = data.restrict[0]
+		r_vegan.textContent =
+			(data.restrict[1].indexOf('Vegetarian/Vegan') == -1) ? "No" : "Yes"
+		r_pork.textContent =
+			(data.restrict[1].indexOf('No pork') == -1) ? "No" : "Yes"
+		r_gluten.textContent =
+			(data.restrict[1].indexOf('No gluten') == -1) ? "No" : "Yes"
+		r_nuts.textContent =
+			(data.restrict[1].indexOf('No nuts') == -1) ? "No" : "Yes"
 		status_box.innerHTML = "Done"
 	} else {
 		status_box.innerHTML = data.error
