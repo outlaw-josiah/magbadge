@@ -49,7 +49,7 @@ socket.onmessage = function(response) {
 
 		status_box.innerHTML = "Done"
 	} else {
-		status_box.innerHTML = data.error
+		status_box.innerHTML = "HTTP " + data.status +"<br />"+ data.error
 	}
 }
 socket.onclose = function(event) {
