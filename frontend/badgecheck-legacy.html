@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>Badge Check</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="/frontend/badgecheck-legacy.css">
+
+</head>
+<body>
+	<div class="site-wrapper">
+
+		<div class="site-wrapper-inner">
+
+
+
+				<div class="inner cover">
+					<p class="lead">Click the button to look up the badge ID. (Or just scan it in)</p>
+					<div class="form-group">
+						<input id="badgeID" type="text" maxlength="7" placeholder="Scan Badge" class="form-control input-lg" onkeydown="tBox_keydown(this, event);" onClick="this.select()" autocomplete="off" autofocus>
+					</div>
+					<div class="form-group">
+						<button id="button" onClick="sendBadge()" class="btn btn-default btn-lg">Check Badge</button>
+					</div>
+					<h1 class="alert alert-success cover-heading" id="response">Result will show up here.</h1>
+				</div>
+
+
+			</div>
+
+
+	</div>
+
+
+<script type="text/javascript" src="/frontend/badgecheck-legacy.js"></script>
+
+</body>
+</html>

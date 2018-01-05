@@ -5,10 +5,10 @@ sys.path.insert(0,parentdir)
 
 import unittest, logging, sys, asyncio, random
 import badgecheck as bdgchk
+import datetime
 from unittest.mock	import MagicMock
 from json			import loads
 from datetime		import datetime
-from util			import fmtconvert
 from testfixtures	import log_capture
 from argparse		import Namespace
 
@@ -18,32 +18,6 @@ class FmtConversions(unittest.TestCase):
 		name="Edward Richardson", badge="RRU-28413", ribbon="no ribbon",
 		badge_t="staff", badge_n=500, hr_total=30, hr_worked=0
 	)
-
-	@log_capture(level=logging.ERROR)
-	def test_magapiToBasicAttendee(self, capture):
-		with self.subTest("Input Validation"):
-			self.assertEqual(fmtconvert.magapiToBasicAttendee("Bad input"), {})
-		with self.subTest("Input Validation 2"):
-			self.assertEqual(fmtconvert.magapiToBasicAttendee(
-				"Bad input long text 12345678901234567890"), {})
-		capture.check(
-			("util.fmtconvert", "ERROR",
-			"Malformed data in conversion: Bad input"),
-			("util.fmtconvert", "ERROR",
-			"Malformed data in conversion: Bad input long text 1234567890..."))
-
-	def test_BasicAttendeeToCSV(self):
-		epoch = datetime(1970, 1, 1)
-		compstr = "1970-01-01 00:00:00,staff,500,Edward Richardson,0,30,no ribbon,"
-		with self.subTest(): self.assertEqual(
-			fmtconvert.BasicAttendeeToCSV(epoch, self.dummy_stripped),
-			compstr)
-		with self.subTest("Input Validation: Wrong type"): self.assertEqual(
-			fmtconvert.BasicAttendeeToCSV(epoch, self.dummy_stripped, 3),
-			compstr)
-		with self.subTest("Input Validation"): self.assertEqual(
-			fmtconvert.BasicAttendeeToCSV(epoch, self.dummy_stripped, False),
-			compstr + "False")
 
 	# Doing this test just in case. Should never fail.
 	def test_datetime_strftime(self):
@@ -160,7 +134,7 @@ class requestchecks(unittest.TestCase):
 
 class testSettings(unittest.TestCase):
 	@classmethod
-	def setUpClass(cls):
+	def setUpClass(self):
 		bdgchk.args = Namespace(debug=False)
 
 	def test_runtime_gets(self):
@@ -189,6 +163,48 @@ class testSettings(unittest.TestCase):
 		self.assertEqual(
 			bdgchk.settings.runtime.logfile_suf,
 			bdgchk.getSetting('logfile_suf'))
+
+
+class testState(unittest.TestCase):
+	def test_add(self):
+		bdgchk.util.state.logged_scans = dict()
+		when = datetime(1992, 4, 27, 0, 0, 0)
+		foo = dict(name="foo", badge_num=1)
+		bdgchk.util.state.add_scan(foo, when, "Test TS Add")
+		self.assertEqual(
+			bdgchk.util.state.logged_scans,
+			{"1992-04-27": {"Test TS Add": {1: [
+				bdgchk.util.state.SmallScan(time=when, name="foo")]
+			}}}
+		)
+
+	def test_double_add(self):
+		with self.assertRaises(ValueError) as context:
+			firstTime = datetime(1992, 4, 27, 0, 0, 0)
+			secondTime = datetime(1992, 4, 27, 0, 1, 0)
+			foo = dict(name="foo", badge_num=1)
+			bdgchk.util.state.add_scan(foo, firstTime, "Test TS F")
+			bdgchk.util.state.add_scan(foo, secondTime, "Test TS F")
+
+	def test_double_add_grace(self):
+		firstTime = datetime(1992, 4, 27, 0, 0, 0)
+		secondTime = datetime(1992, 4, 27, 0, 0, 30)
+		foo = dict(name="foo", badge_num=1)
+		bdgchk.util.state.add_scan(foo, firstTime, "Test TS Grace")
+		bdgchk.util.state.add_scan(foo, secondTime, "Test TS Grace")
+
+
+class testGenericUtil(unittest.TestCase):
+	def test_message_blank(self):
+		foo = dict(result={})
+		bdgchk.util.addResponseMessage(foo, "Test")
+		self.assertEqual(foo['result']['message'], "Test")
+
+	def test_message_existing(self):
+		foo = dict(result=dict(message="Test"))
+		bdgchk.util.addResponseMessage(foo, "Test")
+		self.assertEqual(foo['result']['message'], "Test Test")
+
 
 if __name__ == '__main__':
 	unittest.main()

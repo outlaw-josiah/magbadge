@@ -41,7 +41,7 @@ class magapi:
 
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
-version_full = "2.0.0"
+version_full = "2.0.1"
 version = version_full.split('+')[0]
 version_meta = version_full.split('+')[1] if '+' in version_full else ''
 logfile = "logs/server.log"
