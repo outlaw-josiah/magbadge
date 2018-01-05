@@ -190,5 +190,34 @@ class testSettings(unittest.TestCase):
 			bdgchk.settings.runtime.logfile_suf,
 			bdgchk.getSetting('logfile_suf'))
 
+
+class testState(unittest.TestCase):
+	def test_add(self):
+		bdgchk.util.state.logged_scans = dict()
+		when = datetime(1992, 4, 27, 0, 0, 0)
+		foo = dict(name="foo", badge_num=1)
+		bdgchk.util.state.add_scan(foo, when, "Test TS Add")
+		self.assertEqual(
+			bdgchk.util.state.logged_scans,
+			{"1992-04-27": {"Test TS Add": {1: [
+				bdgchk.util.state.SmallScan(time=when, name="foo")]
+			}}}
+		)
+
+	def test_double_add(self):
+		with self.assertRaises(ValueError) as context:
+			firstTime = datetime(1992, 4, 27, 0, 0, 0)
+			secondTime = datetime(1992, 4, 27, 0, 1, 0)
+			foo = dict(name="foo", badge_num=1)
+			bdgchk.util.state.add_scan(foo, firstTime, "Test TS F")
+			bdgchk.util.state.add_scan(foo, secondTime, "Test TS F")
+
+	def test_double_add_grace(self):
+		firstTime = datetime(1992, 4, 27, 0, 0, 0)
+		secondTime = datetime(1992, 4, 27, 0, 0, 30)
+		foo = dict(name="foo", badge_num=1)
+		bdgchk.util.state.add_scan(foo, firstTime, "Test TS Grace")
+		bdgchk.util.state.add_scan(foo, secondTime, "Test TS Grace")
+
 if __name__ == '__main__':
 	unittest.main()
