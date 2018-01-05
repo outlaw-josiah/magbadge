@@ -5,6 +5,7 @@ sys.path.insert(0,parentdir)
 
 import unittest, logging, sys, asyncio, random
 import badgecheck as bdgchk
+import datetime
 from unittest.mock	import MagicMock
 from json			import loads
 from datetime		import datetime
