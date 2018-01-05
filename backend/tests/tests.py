@@ -160,7 +160,7 @@ class requestchecks(unittest.TestCase):
 
 class testSettings(unittest.TestCase):
 	@classmethod
-	def setUpClass(cls):
+	def setUpClass(self):
 		bdgchk.args = Namespace(debug=False)
 
 	def test_runtime_gets(self):
