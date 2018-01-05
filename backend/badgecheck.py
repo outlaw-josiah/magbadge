@@ -148,6 +148,8 @@ async def prcsConnection(sock, path):
 			elif msgJSON['action'] == 'query.badge':
 				now = datetime.now()
 				valid = await getBadge(sock, msgJSON['params'], resp)
+				if valid:
+					util.specialBadgeCheck(resp)
 				if args.debug:
 					util.addResponseMessage(
 						resp,
