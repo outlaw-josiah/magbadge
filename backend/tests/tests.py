@@ -219,5 +219,18 @@ class testState(unittest.TestCase):
 		bdgchk.util.state.add_scan(foo, firstTime, "Test TS Grace")
 		bdgchk.util.state.add_scan(foo, secondTime, "Test TS Grace")
 
+
+class testGenericUtil(unittest.TestCase):
+	def test_message_blank(self):
+		foo = dict(result={})
+		bdgchk.util.addResponseMessage(foo, "Test")
+		self.assertEqual(foo['result']['message'], "Test")
+
+	def test_message_existing(self):
+		foo = dict(result=dict(message="Test"))
+		bdgchk.util.addResponseMessage(foo, "Test")
+		self.assertEqual(foo['result']['message'], "Test Test")
+
+
 if __name__ == '__main__':
 	unittest.main()
