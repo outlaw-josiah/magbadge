@@ -1,0 +1,39 @@
+MIT License (Modified)
+
+Copyright (c) 2018 Tahvohck
+Copyright (c) 2018 Edward Richardson
+Copyright (c) 2018 08BF A8FC CCBB C09E 1192  9FA9 6AC4 28A5 EE2C 5FDD
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, and/or sublicense, copies
+of the Software, and to permit persons to whom the Software is furnished to
+do so, subject to the following conditions:
+
+- The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+Additonal permission is hereby granted, free of charge, to any person obtaining
+a copy of the Software, to sell copies of the software, subject to one of the
+following conditions:
+
+- The Software is sold by a representative of Magfest INC, for the purpose of
+  Magfest INC operations
+- The licensee has been granted explicit permission to do so, posted publicly
+  and signed by the PGP key of a copyright holder.
+
+
+This license is applicable retroactively to commit f00db269 bfc2cd2b 2a257099
+5a809798 af360bf4 in the commit tree (the "Initial commit"). Changes to this
+license require the changing commit to be signed via PGP key of a copyright
+holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
