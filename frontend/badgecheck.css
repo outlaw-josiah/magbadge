@@ -80,10 +80,10 @@ div#results {
 
 @font-face {
 	font-family: Input;
-	src: url(frontend/input_regular.ttf);
+	src: url(/frontend/input_regular.ttf);
 }
 @font-face {
 	font-family: Input;
-	src: url(frontend/input_bold.ttf);
+	src: url(/frontend/input_bold.ttf);
 	font-weight: bold;
 }
