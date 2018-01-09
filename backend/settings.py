@@ -42,7 +42,7 @@ class magapi:
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
 try:
-	with open('../VERSION') as file:
+	with open(sys.path[0] + '/../VERSION') as file:
 		version_full = file.read()
 except FileNotFoundError:
 	try:
