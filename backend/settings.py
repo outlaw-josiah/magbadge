@@ -41,7 +41,14 @@ class magapi:
 
 # Everything else here is "Hardcoded" settings, put here to keep them out of the
 # main module
-version_full = get_version(root=sys.path[0] + '/..')
+try:
+	with open('../VERSION') as file:
+		version_full = file.read()
+except FileNotFoundError:
+	try:
+		version_full = get_version(root=sys.path[0] + '/..')
+	except LookupError:
+		version_full = '2.0+failed_versioning'
 version = version_full.split('+')[0]
 version_meta = version_full.split('+')[1] if '+' in version_full else ''
 logfile = "logs/server.log"
