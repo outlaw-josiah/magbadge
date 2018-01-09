@@ -1,0 +1,2 @@
+python -c "import setuptools_scm as scm; print(scm.get_version())" > VERSION
+git add VERSION

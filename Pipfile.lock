@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cdbbca76f6a36ba5c2356d3c62a75a0c37f18dc3634d05b79a89d84e2be9ace1"
+            "sha256": "6e3324f5db4ebe6a7c2c38fecd4db226d773b1db1491019bacd1cb00925001b3"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -67,6 +67,13 @@
                 "sha256:49ab4685589986a42da85706b3311a2f74f1af567d39fee6cb1e088d7a75fb5f"
             ],
             "version": "==1.15.6"
+        },
+        "setuptools-scm-git-archive": {
+            "hashes": [
+                "sha256:af6b40a3f2f6d79b2b6b495258ff441641908ff2c4c9aaa66765b87ec6f72c35",
+                "sha256:52425f905518247c685fc64c5fdba6e1e74443c8562e141c8de56059be0e31da"
+            ],
+            "version": "==1.0"
         },
         "testfixtures": {
             "hashes": [
