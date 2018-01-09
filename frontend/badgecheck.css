@@ -48,7 +48,7 @@ div#results {
 }
 #results * {
 	margin: 0px;
-	font-family: Consolas;
+	font-family: Input;
 	--r-height: 10vh;
 	overflow-y: hidden;
 }
@@ -77,3 +77,13 @@ div#results {
 }
 
 #ERROR { background-color: green; height: 100% }
+
+@font-face {
+	font-family: Input;
+	src: url(frontend/input_regular.ttf);
+}
+@font-face {
+	font-family: Input;
+	src: url(frontend/input_bold.ttf);
+	font-weight: bold;
+}
