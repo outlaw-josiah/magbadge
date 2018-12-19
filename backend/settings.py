@@ -4,7 +4,7 @@ from setuptools_scm import get_version
 
 class runtime:
 	apikey = "apikey.txt"
-	url = "https://onsite.uber.magfest.org/uber/jsonrpc/"
+	url = "https://reggie.magfest.org/jsonrpc/" """Might Need to Change Back before Event """"
 	l_port = 28424
 	logfile_pre = ""
 	logfile_suf = ".csv"
